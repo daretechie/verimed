@@ -82,11 +82,33 @@ For countries without registry APIs, VeriMed automatically uses AI document veri
 
 ## Currently Supported Countries
 
-| Country | API | Status |
-|---------|-----|--------|
-| 🇺🇸 USA | NPI (NPPES) | ✅ Live |
-| 🇫🇷 France | ANS (FHIR) | ✅ Live |
-| 🇦🇪 UAE | DHA (Dubai Pulse) | ✅ Live |
+| Country | Registry | API Technology | Status |
+|---------|----------|----------------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | REST | ✅ Live |
+| 🇫🇷 **France** | RPPS (ANS) | FHIR | ✅ Live |
+| 🇦🇪 **UAE** | DHA (Dubai Pulse) | REST | ✅ Live |
+| 🇰🇪 **Kenya** | KMPDC (Intellex) | REST | ✅ Live |
+| 🇳🇱 **Netherlands** | BIG-register | SOAP | ✅ Live |
+| 🇮🇱 **Israel** | MOH | CKAN | ✅ Live |
+| 🇲🇽 **Mexico** | SEP (RapidAPI) | REST | ✅ Live |
+
+### Countries We'd Love to Add
+
+| Country | Potential Registry | Notes |
+|---------|-------------------|-------|
+| 🇬🇧 UK | GMC | Need API access investigation |
+| 🇨🇦 Canada | CPSO/Provincial | Multiple provincial registries |
+| 🇦🇺 Australia | AHPRA | Need contributor |
+| 🇮🇳 India | NMC | Need contributor |
+| 🇯🇵 Japan | JMA | Need contributor |
+
+## Testing Requirements
+
+When adding a new adapter, please include:
+
+1. **Unit tests** in `src/infrastructure/adapters/registry/{cc}-{registry}.adapter.spec.ts`
+2. **E2E test case** for the new country in `test/verification.e2e-spec.ts`
+3. **Documentation** updates to this file and `README.md`
 
 ## Questions?
 

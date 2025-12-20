@@ -4,10 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-24_LTS-green.svg)](https://nodejs.org/)
 [![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?logo=github-sponsors)](https://github.com/sponsors/daretechie)
+[![Coverage](https://img.shields.io/badge/Coverage-75%25-green.svg)](#)
 
 > **Global Medical Provider Verification Engine**
 
 VeriMed is a professional-grade, hybrid verification platform designed to validate healthcare providers globally. It bridges the gap between official registries (e.g., US NPI) and AI-driven document analysis.
+
+Check out our [Architecture Decision Records (ADR)](docs/adr) to understand the design choices behind VeriMed.
+
+
 
 ## 🌍 Global Coverage
 
@@ -91,6 +96,55 @@ npm run test          # Run unit tests (including Fuzzy/Security logic)
 npm run test:e2e      # Full end-to-end flow
 ```
 
+---
+
+## 📡 API Usage Examples
+
+### Submit a Verification Request (US Provider)
+```bash
+curl -X POST http://localhost:3000/verify \
+  -H "x-api-key: your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "providerId": "provider-001",
+    "countryCode": "US",
+    "firstName": "John",
+    "lastName": "Smith",
+    "licenseNumber": "1234567890"
+  }'
+```
+
+### Check Verification Status
+```bash
+curl http://localhost:3000/verify/{transactionId} \
+  -H "x-api-key: your-api-key"
+```
+
+### Administrative Review (JWT Required)
+```bash
+# First, login to get JWT token
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"user": "admin", "pass": "your-password"}'
+
+# Then approve a pending verification
+curl -X PUT http://localhost:3000/verify/{transactionId}/review \
+  -H "x-api-key: your-api-key" \
+  -H "Authorization: Bearer {jwt-token}" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "VERIFIED", "reason": "Documents validated"}'
+```
+
+### Health Check
+```bash
+curl http://localhost:3000/health
+```
+
+> [!TIP]
+> Import our [Postman Collection](postman/VeriMed-API.postman_collection.json) for a full interactive API reference.
+
+---
+
 ## 🔐 Security
 
 VeriMed is built with security-first principles for medical data:
@@ -98,6 +152,8 @@ VeriMed is built with security-first principles for medical data:
 - **Magic Number Validation**: File uploads are verified by their binary signature, not just extensions.
 - **Configurable CORS**: Strict origin whitelisting for production deployments.
 - **Rate Limiting**: Built-in protection against brute-force and DDoS.
+
+For organizations requiring regulatory compliance, see our [HIPAA Compliance Guide](docs/HIPAA_COMPLIANCE.md).
 
 See [SECURITY.md](SECURITY.md) for detailed hardening instructions.
 
