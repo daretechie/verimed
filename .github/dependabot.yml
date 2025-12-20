@@ -7,7 +7,13 @@ updates:
     groups:
       dependencies:
         patterns:
+        patterns:
           - "*"
+        exclude-patterns:
+          - "file-type"
+    ignore:
+      - dependency-name: "file-type"
+        update-types: ["version-update:semver-major"]
   
   - package-ecosystem: "docker"
     directory: "/"
