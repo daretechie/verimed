@@ -45,7 +45,7 @@ import { TerminusModule } from '@nestjs/terminus';
             type: 'postgres',
             url: dbUrl,
             autoLoadEntities: true,
-            synchronize: false,
+            synchronize: config.get('NODE_ENV') === 'test',
           };
         }
         return {
