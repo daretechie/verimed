@@ -32,7 +32,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const correlationId = crypto.randomUUID();
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      this.logger.error(`[${correlationId}] ${exception}`);
+      const errorMsg =
+        exception instanceof Error ? exception.message : String(exception);
+      this.logger.error(`[${correlationId}] ${errorMsg}`);
     }
 
     response.status(status).json({

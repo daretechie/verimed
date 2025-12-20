@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-call */
 process.env.JWT_SECRET = 'test-jwt-secret-123-abc-789';
 process.env.ADMIN_USER = 'admin';
-process.env.ADMIN_PASS = '$2b$10$H2E9awk4GsTMSQi8sJnaC.UfPsN9WmBF6Mc43xCrb4Vbl9NB4FJQ2';
+process.env.ADMIN_PASS =
+  '$2b$10$H2E9awk4GsTMSQi8sJnaC.UfPsN9WmBF6Mc43xCrb4Vbl9NB4FJQ2';
 process.env.API_KEY = 'verimed-secret';
 
 import { Test, TestingModule } from '@nestjs/testing';

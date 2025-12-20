@@ -18,7 +18,8 @@ export class AuthService {
       return null;
     }
 
-    const isMatch = user === adminUser && (await bcrypt.compare(pass, adminPassHash));
+    const isMatch =
+      user === adminUser && (await bcrypt.compare(pass, adminPassHash));
 
     if (isMatch) {
       const payload = { username: user, sub: 'admin' };

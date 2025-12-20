@@ -97,7 +97,9 @@ export class VerificationController {
     ];
 
     const validateFile = async (file: Express.Multer.File) => {
-      const type = await FileType.fromBuffer(file.buffer);
+      const type = (await FileType.fromBuffer(file.buffer)) as
+        | { mime: string; ext: string }
+        | undefined;
       if (!type || !allowedMimeTypes.includes(type.mime)) {
         throw new BadRequestException(
           `Invalid file type for ${file.originalname}. Allowed: ${allowedMimeTypes.join(', ')}`,
