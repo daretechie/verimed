@@ -38,7 +38,7 @@ If you are using VeriMed to process PHI on behalf of a covered entity, ensure yo
 |-------------|-------------|--------|
 | Rate Limiting | `THROTTLE_LIMIT` | ✅ Implementation Included |
 | Security Headers | `Helmet` | ✅ Implementation Included |
-| CSRF Protection | N/A (Stateless API) | ✅ N/A |
+| CSRF Protection | N/A (Stateless API) | ➖ Not Applicable |
 | Sensitive Data Masking | Custom Adapters | ⚠️ User Responsibility |
 
 ## 6. Self-Audit Checklist

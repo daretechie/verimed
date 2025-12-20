@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-24_LTS-green.svg)](https://nodejs.org/)
 [![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?logo=github-sponsors)](https://github.com/sponsors/daretechie)
-[![Coverage](https://img.shields.io/badge/Coverage-75%25%20(Manual)-green.svg)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-~75%25%20(illustrative)-green.svg)](#)
 
 > **Global Medical Provider Verification Engine**
 

@@ -12,7 +12,7 @@
     },
     {
       "key": "apiKey",
-      "value": "verimed-secret-change-me",
+      "value": "<YOUR_API_KEY>",
       "type": "string"
     },
     {
