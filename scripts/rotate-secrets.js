@@ -9,7 +9,9 @@ console.log('\n--- VERIMED SECRETS ROTATOR ---');
 const envPath = path.join(__dirname, '../.env');
 
 if (!fs.existsSync(envPath)) {
-  console.log('⚠️ No .env file found. Generating new secrets for your template:');
+  console.log(
+    '⚠️ No .env file found. Generating new secrets for your template:',
+  );
   console.log('\nAPI_KEY=' + generateKey());
   console.log('JWT_SECRET=' + generateKey());
   console.log('\n---------------------------------\n');

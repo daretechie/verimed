@@ -19,9 +19,19 @@ export default tseslint.config(
       },
       sourceType: 'commonjs',
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['scripts/*.js'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    files: ['scripts/*.js'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+      'no-redeclare': 'off',
     },
   },
   {
