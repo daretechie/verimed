@@ -1,7 +1,11 @@
 # VeriMed API
 
-[![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/daretechie)
-- Global Medical Provider Verification Engine
+[![CI](https://github.com/daretechie/verimed/actions/workflows/ci.yml/badge.svg)](https://github.com/daretechie/verimed/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-24_LTS-green.svg)](https://nodejs.org/)
+[![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?logo=github-sponsors)](https://github.com/sponsors/daretechie)
+
+> **Global Medical Provider Verification Engine**
 
 VeriMed is a professional-grade, hybrid verification platform designed to validate healthcare providers globally. It bridges the gap between official registries (e.g., US NPI) and AI-driven document analysis.
 
@@ -101,5 +105,22 @@ See [SECURITY.md](SECURITY.md) for detailed hardening instructions.
 
 We welcome contributions of new country adapters! If you have public API access to a national medical registry, please see our [Contribution Guide](CONTRIBUTING.md) for implementation details.
 
-## License
-MIT licensed.
+---
+
+## 🏢 Enterprise Support
+
+Need help integrating VeriMed into your stack, or require a 99.9% uptime SLA?
+
+**VeriMed Enterprise** offers:
+- Priority 24/7 Support
+- Custom Registry Integrations
+- Managed Hosting (SaaS)
+- Commercial Licensing
+
+📧 [Contact for Enterprise](mailto:deeprince2020@gmail.com)
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
