@@ -11,7 +11,7 @@ VeriMed supports PostgreSQL. Ensure your database disk is encrypted:
 - **SQLite**: **NOT RECOMMENDED** for PHI. Use PostgreSQL in production.
 
 ### In-Transit Encryption
-- **TLS 1.3**: Always serve the API behind a reverse proxy (Nginx, Traefik) configured with modern TLS settings.
+- **TLS 1.3**: Always serve the API behind a reverse proxy (Nginx, Traefik) that enforces **TLS 1.3** only.
 - **mTLS**: Consider mutual TLS for communication between your internal services and VeriMed.
 
 ## 2. Authentication & Access Control
@@ -38,13 +38,13 @@ If you are using VeriMed to process PHI on behalf of a covered entity, ensure yo
 |-------------|-------------|--------|
 | Rate Limiting | `THROTTLE_LIMIT` | ✅ Implementation Included |
 | Security Headers | `Helmet` | ✅ Implementation Included |
-| CSRF Protection | N/A (Stateless API) | ✅ Implementation Included |
+| CSRF Protection | N/A (Stateless API) | ✅ N/A |
 | Sensitive Data Masking | Custom Adapters | ⚠️ User Responsibility |
 
 ## 6. Self-Audit Checklist
 
 1. [ ] Database encryption enabled?
-2. [ ] HTTPS/TLS 1.2+ enforced?
+2. [ ] TLS 1.3 enforced?
 3. [ ] Default `API_KEY` changed in `.env`?
 4. [ ] Admin password hashed and secure?
 5. [ ] Minimal IAM permissions for the Docker container?

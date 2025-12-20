@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-24_LTS-green.svg)](https://nodejs.org/)
 [![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?logo=github-sponsors)](https://github.com/sponsors/daretechie)
-[![Coverage](https://img.shields.io/badge/Coverage-75%25-green.svg)](#)
+[![Coverage](https://img.shields.io/badge/Coverage-75%25%20(Manual)-green.svg)](#)
 
 > **Global Medical Provider Verification Engine**
 
@@ -103,7 +103,7 @@ npm run test:e2e      # Full end-to-end flow
 ### Submit a Verification Request (US Provider)
 ```bash
 curl -X POST http://localhost:3000/verify \
-  -H "x-api-key: your-api-key" \
+  -H "x-api-key: <YOUR_API_KEY>" \
   -H "Content-Type: application/json" \
   -d '{
     "providerId": "provider-001",
@@ -117,20 +117,20 @@ curl -X POST http://localhost:3000/verify \
 ### Check Verification Status
 ```bash
 curl http://localhost:3000/verify/{transactionId} \
-  -H "x-api-key: your-api-key"
+  -H "x-api-key: <YOUR_API_KEY>"
 ```
 
 ### Administrative Review (JWT Required)
 ```bash
-# First, login to get JWT token
+# First, log in to get a JWT token
 curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"user": "admin", "pass": "your-password"}'
+  -d '{"user": "admin", "pass": "<YOUR_ADMIN_PASSWORD>"}'
 
 # Then approve a pending verification
 curl -X PUT http://localhost:3000/verify/{transactionId}/review \
-  -H "x-api-key: your-api-key" \
-  -H "Authorization: Bearer {jwt-token}" \
+  -H "x-api-key: <YOUR_API_KEY>" \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{"status": "VERIFIED", "reason": "Documents validated"}'
 ```

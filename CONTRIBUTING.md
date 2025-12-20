@@ -96,10 +96,15 @@ For countries without registry APIs, VeriMed automatically uses AI document veri
 
 | Country | Potential Registry | Notes |
 |---------|-------------------|-------|
-| 🇬🇧 UK | GMC | Need API access investigation |
-| 🇨🇦 Canada | CPSO/Provincial | Multiple provincial registries |
-| 🇦🇺 Australia | AHPRA | Need contributor |
-| 🇮🇳 India | NMC | Need contributor |
+| 🇬🇧 **UK** | GMC | Need a contributor |
+| 🇨🇦 **Canada** | CPSO/Provincial | Need a contributor |
+| 🇦🇺 **Australia** | AHPRA | Need a contributor |
+| 🇮🇳 **India** | NMC | Need a contributor |
+| 🇯🇵 **Japan** | JMA | Need a contributor |
+| 🇩🇪 **Germany** | BÄK | Need a contributor |
+| 🇿🇦 **South Africa** | HPCSA | Need a contributor |
+| 🇳🇬 **Nigeria** | MDCN | Need a contributor |
+| 🇧🇷 **Brazil** | CFM | Need a contributor |
 | 🇯🇵 Japan | JMA | Need contributor |
 
 ## Testing Requirements
