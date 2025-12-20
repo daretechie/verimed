@@ -1,4 +1,7 @@
-# VeriMed - Global Medical Provider Verification Engine
+# VeriMed API
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-VeriMed-pink?style=for-the-badge&logo=github-sponsors)](https://github.com/sponsors/daretechie)
+- Global Medical Provider Verification Engine
 
 VeriMed is a professional-grade, hybrid verification platform designed to validate healthcare providers globally. It bridges the gap between official registries (e.g., US NPI) and AI-driven document analysis.
 
