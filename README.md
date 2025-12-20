@@ -152,6 +152,7 @@ VeriMed is built with security-first principles for medical data:
 - **Magic Number Validation**: File uploads are verified by their binary signature, not just extensions.
 - **Configurable CORS**: Strict origin whitelisting for production deployments.
 - **Rate Limiting**: Built-in protection against brute-force and DDoS.
+- **Secrets Rotation**: Provided utility to rotate critical keys (`npm run rotate-secrets`).
 
 For organizations requiring regulatory compliance, see our [HIPAA Compliance Guide](docs/HIPAA_COMPLIANCE.md).
 

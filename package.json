@@ -33,6 +33,7 @@
     "test:e2e": "NODE_ENV=test AI_API_KEY=mock jest --config ./test/jest-e2e.json",
     "hash-password": "node scripts/hash-password.js",
     "generate-secrets": "node scripts/generate-secrets.js",
+    "rotate-secrets": "node scripts/rotate-secrets.js",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run typeorm -- migration:generate -d datasource.ts",
     "migration:run": "npm run typeorm -- migration:run -d datasource.ts",
