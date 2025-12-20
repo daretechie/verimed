@@ -58,7 +58,14 @@ export class YourCountryRegistryAdapter implements IRegistryAdapter {
 }
 ```
 
-### 3. Register in AppModule
+### 3. Implement Unit Tests
+
+Create a test file `src/infrastructure/adapters/registry/{cc}-{registry}.adapter.spec.ts` to ensure your adapter works correctly.
+- Test `supports()` with valid and invalid country codes.
+- Test `verify()` with valid/invalid licenses, not found scenarios, and API errors.
+- Mock external API calls (e.g., using `jest.mock`).
+
+### 4. Register in AppModule
 
 Add your adapter to `src/app.module.ts`:
 
@@ -82,11 +89,38 @@ For countries without registry APIs, VeriMed automatically uses AI document veri
 
 ## Currently Supported Countries
 
-| Country | API | Status |
-|---------|-----|--------|
-| 🇺🇸 USA | NPI (NPPES) | ✅ Live |
-| 🇫🇷 France | ANS (FHIR) | ✅ Live |
-| 🇦🇪 UAE | DHA (Dubai Pulse) | ✅ Live |
+| Country | Registry | API Technology | Status |
+|---------|----------|----------------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | REST | ✅ Live |
+| 🇫🇷 **France** | RPPS (ANS) | FHIR | ✅ Live |
+| 🇦🇪 **UAE** | DHA (Dubai Pulse) | REST | ✅ Live |
+| 🇰🇪 **Kenya** | KMPDC (Intellex) | REST | ✅ Live |
+| 🇳🇱 **Netherlands** | BIG-register | SOAP | ✅ Live |
+| 🇮🇱 **Israel** | MOH | CKAN | ✅ Live |
+| 🇲🇽 **Mexico** | SEP (RapidAPI) | REST | ✅ Live |
+
+### Countries We'd Love to Add
+
+| Country | Potential Registry | Notes |
+|---------|-------------------|-------|
+| 🇬🇧 **UK** | GMC | Need a contributor |
+| 🇨🇦 **Canada** | CPSO/Provincial | Need a contributor |
+| 🇦🇺 **Australia** | AHPRA | Need a contributor |
+| 🇮🇳 **India** | NMC | Need a contributor |
+| 🇯🇵 **Japan** | JMA | Need a contributor |
+| 🇩🇪 **Germany** | BÄK | Need a contributor |
+| 🇿🇦 **South Africa** | HPCSA | Need a contributor |
+| 🇳🇬 **Nigeria** | MDCN | Need a contributor |
+| 🇧🇷 **Brazil** | CFM | Need a contributor |
+
+
+## Testing Requirements
+
+When adding a new adapter, please include:
+
+1. **Unit tests** in `src/infrastructure/adapters/registry/{cc}-{registry}.adapter.spec.ts`
+2. **E2E test case** for the new country in `test/verification.e2e-spec.ts`
+3. **Documentation** updates to this file and `README.md`
 
 ## Questions?
 

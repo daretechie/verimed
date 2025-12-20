@@ -10,7 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-12-20
 
 ### Added
-- **Global Coverage**: Initial release supporting 7 national medical registries (USA, France, UAE, Kenya, Netherlands, Israel, Mexico).
+- **Global Coverage**: Initial release supporting 7 national medical registries:
+  - 🇺🇸 USA (NPI/NPPES)
+  - 🇫🇷 France (RPPS/ANS)
+  - 🇦🇪 UAE (DHA/Dubai Pulse)
+  - 🇰🇪 Kenya (KMPDC)
+  - 🇳🇱 Netherlands (BIG-register)
+  - 🇮🇱 Israel (MOH)
+  - 🇲🇽 Mexico (SEP)
 - **Core Engine**: NestJS-based API with Ports and Adapters architecture.
 - **AI Fallback**: Intelligent document verification using OpenAI/Mock fallback when registry APIs are unavailable or fail.
 - **Security**: 

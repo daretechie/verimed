@@ -7,7 +7,6 @@ updates:
     groups:
       dependencies:
         patterns:
-        patterns:
           - "*"
         exclude-patterns:
           - "file-type"

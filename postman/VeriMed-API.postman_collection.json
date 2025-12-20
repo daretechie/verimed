@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "VeriMed API",
+    "description": "Global Medical Provider Verification API - Open Source\n\nDocumentation: https://github.com/daretechie/verimed",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "<YOUR_API_KEY>",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "transactionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Info",
+      "item": [
+        {
+          "name": "Root - API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('jwtToken', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"admin\",\n  \"pass\": \"your-password-here\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Verification",
+      "item": [
+        {
+          "name": "Submit Verification - US (NPI)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('transactionId', jsonData.transactionId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"us-provider-001\",\n  \"countryCode\": \"US\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"licenseNumber\": \"1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - France (ANS)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('transactionId', jsonData.transactionId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"fr-provider-001\",\n  \"countryCode\": \"FR\",\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Dupont\",\n  \"licenseNumber\": \"10101234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - UAE (DHA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"ae-provider-001\",\n  \"countryCode\": \"AE\",\n  \"firstName\": \"Ahmed\",\n  \"lastName\": \"Hassan\",\n  \"licenseNumber\": \"DHA-P-12345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - Kenya (KMPDC)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"ke-provider-001\",\n  \"countryCode\": \"KE\",\n  \"firstName\": \"Wanjiku\",\n  \"lastName\": \"Mwangi\",\n  \"licenseNumber\": \"A12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - Netherlands (BIG)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"nl-provider-001\",\n  \"countryCode\": \"NL\",\n  \"firstName\": \"Jan\",\n  \"lastName\": \"de Vries\",\n  \"licenseNumber\": \"19123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - Israel (MOH)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"il-provider-001\",\n  \"countryCode\": \"IL\",\n  \"firstName\": \"David\",\n  \"lastName\": \"Cohen\",\n  \"licenseNumber\": \"12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - Mexico (SEP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"mx-provider-001\",\n  \"countryCode\": \"MX\",\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"García\",\n  \"licenseNumber\": \"1234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            }
+          }
+        },
+        {
+          "name": "Submit Verification - AI Fallback (Brazil)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"br-provider-001\",\n  \"countryCode\": \"BR\",\n  \"firstName\": \"Roberto\",\n  \"lastName\": \"Silva\",\n  \"licenseNumber\": \"CRM-12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            },
+            "description": "Brazil has no live API adapter - this will trigger AI document verification fallback"
+          }
+        },
+        {
+          "name": "Get Verification Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/verify/{{transactionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify", "{{transactionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Administrative Review (Approve)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"VERIFIED\",\n  \"reason\": \"Documents validated manually\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify/{{transactionId}}/review",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify", "{{transactionId}}", "review"]
+            }
+          }
+        },
+        {
+          "name": "Administrative Review (Reject)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwtToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REJECTED\",\n  \"reason\": \"Invalid or expired license documentation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify/{{transactionId}}/review",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify", "{{transactionId}}", "review"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

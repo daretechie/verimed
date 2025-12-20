@@ -19,7 +19,9 @@ export default tseslint.config(
       },
       sourceType: 'commonjs',
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['scripts/*.js'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -30,6 +32,21 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       "prettier/prettier": ["error", { endOfLine: "auto" }],
+    },
+  },
+  {
+    files: ['scripts/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+        project: null,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+      'no-redeclare': 'off',
     },
   },
 );
