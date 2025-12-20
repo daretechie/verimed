@@ -27,19 +27,26 @@ export default tseslint.config(
     },
   },
   {
-    files: ['scripts/*.js'],
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-      '@typescript-eslint/no-var-requires': 'off',
-      'no-redeclare': 'off',
-    },
-  },
-  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       "prettier/prettier": ["error", { endOfLine: "auto" }],
+    },
+  },
+  {
+    files: ['scripts/*.js'],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: false,
+        project: null,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-var-requires': 'off',
+      'no-redeclare': 'off',
     },
   },
 );

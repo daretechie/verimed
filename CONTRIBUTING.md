@@ -58,7 +58,14 @@ export class YourCountryRegistryAdapter implements IRegistryAdapter {
 }
 ```
 
-### 3. Register in AppModule
+### 3. Implement Unit Tests
+
+Create a test file `src/infrastructure/adapters/registry/{cc}-{registry}.adapter.spec.ts` to ensure your adapter works correctly.
+- Test `supports()` with valid and invalid country codes.
+- Test `verify()` with valid/invalid licenses, not found scenarios, and API errors.
+- Mock external API calls (e.g., using `jest.mock`).
+
+### 4. Register in AppModule
 
 Add your adapter to `src/app.module.ts`:
 
@@ -105,7 +112,7 @@ For countries without registry APIs, VeriMed automatically uses AI document veri
 | 🇿🇦 **South Africa** | HPCSA | Need a contributor |
 | 🇳🇬 **Nigeria** | MDCN | Need a contributor |
 | 🇧🇷 **Brazil** | CFM | Need a contributor |
-| 🇯🇵 Japan | JMA | Need contributor |
+
 
 ## Testing Requirements
 
