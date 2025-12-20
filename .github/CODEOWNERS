@@ -1,0 +1,16 @@
+# Global owners
+*       @verimed/core-team
+
+# Architecture Components
+/src/domain/        @verimed/architects
+/src/application/   @verimed/backend-leads
+
+# Adapters (Country Specific)
+/src/infrastructure/adapters/registry/us-npi*   @verimed/team-usa
+/src/infrastructure/adapters/registry/fr-ans*   @verimed/team-eu
+/src/infrastructure/adapters/registry/nl-big*   @verimed/team-eu
+
+# DevOps & Security
+/k8s/               @verimed/devops
+/Dockerfile         @verimed/devops
+/SECURITY.md        @verimed/security

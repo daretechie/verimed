@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verimed-api
+  labels:
+    app: verimed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: verimed
+  template:
+    metadata:
+      labels:
+        app: verimed
+    spec:
+      containers:
+      - name: api
+        image: verimed-api:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: verimed-secrets
+              key: api-key
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: verimed-secrets
+              key: db-url
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: verimed-service
+spec:
+  selector:
+    app: verimed
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: LoadBalancer
