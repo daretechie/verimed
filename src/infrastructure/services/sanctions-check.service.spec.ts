@@ -131,6 +131,7 @@ describe('SanctionsCheckService', () => {
     it('should skip SAM check when no name or NPI provided', async () => {
       const result = await service.checkSanctions();
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockedAxios.get).not.toHaveBeenCalled();
       expect(result.isExcluded).toBe(false);
     });
@@ -159,8 +160,9 @@ describe('SanctionsCheckService', () => {
         ],
       }).compile();
 
-      const serviceWithoutLeie =
-        module.get<SanctionsCheckService>(SanctionsCheckService);
+      const serviceWithoutLeie = module.get<SanctionsCheckService>(
+        SanctionsCheckService,
+      );
       mockedAxios.get.mockResolvedValue({ data: { results: [] } });
 
       const result = await serviceWithoutLeie.checkSanctions(

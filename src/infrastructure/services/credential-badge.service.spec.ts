@@ -62,7 +62,11 @@ describe('CredentialBadgeService', () => {
       mockVerificationRepo.findOne.mockResolvedValue(mockVerification);
       mockBadgeRepo.save.mockImplementation((badge) => Promise.resolve(badge));
 
-      const result = await service.createBadge('ver-123', 'Dr. John Smith', 'Cardiology');
+      const result = await service.createBadge(
+        'ver-123',
+        'Dr. John Smith',
+        'Cardiology',
+      );
 
       expect(result).toHaveProperty('id');
       expect(result).toHaveProperty('shortCode');
@@ -75,8 +79,9 @@ describe('CredentialBadgeService', () => {
     it('should throw NotFoundException when verification not found', async () => {
       mockVerificationRepo.findOne.mockResolvedValue(null);
 
-      await expect(service.createBadge('invalid-id', 'Dr. Test'))
-        .rejects.toThrow(NotFoundException);
+      await expect(
+        service.createBadge('invalid-id', 'Dr. Test'),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw error when verification is not VERIFIED', async () => {
@@ -85,8 +90,9 @@ describe('CredentialBadgeService', () => {
         status: 'PENDING',
       });
 
-      await expect(service.createBadge('ver-123', 'Dr. Test'))
-        .rejects.toThrow('Cannot create badge for non-verified provider');
+      await expect(service.createBadge('ver-123', 'Dr. Test')).rejects.toThrow(
+        'Cannot create badge for non-verified provider',
+      );
     });
   });
 
@@ -105,8 +111,9 @@ describe('CredentialBadgeService', () => {
     it('should throw NotFoundException when badge not found', async () => {
       mockBadgeRepo.findOne.mockResolvedValue(null);
 
-      await expect(service.verifyByShortCode('INVALID'))
-        .rejects.toThrow(NotFoundException);
+      await expect(service.verifyByShortCode('INVALID')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -123,8 +130,9 @@ describe('CredentialBadgeService', () => {
     it('should throw NotFoundException when badge not found', async () => {
       mockBadgeRepo.findOne.mockResolvedValue(null);
 
-      await expect(service.getBadgeById('invalid'))
-        .rejects.toThrow(NotFoundException);
+      await expect(service.getBadgeById('invalid')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -166,8 +174,9 @@ describe('CredentialBadgeService', () => {
     it('should throw NotFoundException when badge not found', async () => {
       mockBadgeRepo.findOne.mockResolvedValue(null);
 
-      await expect(service.revokeBadge('invalid'))
-        .rejects.toThrow(NotFoundException);
+      await expect(service.revokeBadge('invalid')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

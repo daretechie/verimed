@@ -72,7 +72,10 @@ describe('VeriMed System (E2E)', () => {
     const body = response.body as VerificationResponse;
     expect(body).toHaveProperty('transactionId');
     // US providers go through NPI registry - may be VERIFIED or REJECTED based on lookup
-    expect([VerificationStatus.VERIFIED, VerificationStatus.REJECTED]).toContain(body.status);
+    expect([
+      VerificationStatus.VERIFIED,
+      VerificationStatus.REJECTED,
+    ]).toContain(body.status);
 
     transactionId = body.transactionId;
   });
