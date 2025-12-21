@@ -49,7 +49,7 @@ export class VerificationLogEntity {
    * Verification expiration date (120 days from verification)
    * NCQA 2025 requires re-verification after this window
    */
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   @Index()
   expiresAt: Date | null;
 
