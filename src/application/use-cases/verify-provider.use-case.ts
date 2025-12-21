@@ -35,16 +35,48 @@ export class VerifyProviderUseCase {
 
     try {
       if (adapter) {
+        // Country has official API - use primary source verification
         registryResult = await adapter.verify(request);
       } else {
-        this.logger.warn(
-          `No registry adapter found for country: ${request.countryCode}. Falling back to document only.`,
+        // No official API for this country - document required
+        const hasDocuments =
+          request.documents.length > 0 || request.idDocument !== undefined;
+
+        if (!hasDocuments) {
+          // REJECT: Unsupported country without document upload
+          this.logger.warn(
+            `Country ${request.countryCode} not supported and no documents provided.`,
+          );
+          registryResult = new VerificationResult(
+            VerificationStatus.REJECTED,
+            VerificationMethod.AI_DOCUMENT,
+            new Date(),
+            {
+              reason: 'Document required for unsupported country',
+              countryCode: request.countryCode,
+              supportedCountries: ['US', 'FR', 'AE', 'NL', 'IL'],
+              hint: 'Please upload a medical license/certificate document',
+            },
+          );
+
+          // Save and return early - no further processing needed
+          const transactionId = await this.repository.save(
+            request,
+            registryResult,
+          );
+          registryResult.transactionId = transactionId;
+          return registryResult;
+        }
+
+        // Documents provided - proceed with AI verification
+        this.logger.log(
+          `No registry adapter for ${request.countryCode}. Processing with AI document verification.`,
         );
         registryResult = new VerificationResult(
-          VerificationStatus.MANUAL_REVIEW,
-          VerificationMethod.AI_DOCUMENT, // Default method when no registry
+          VerificationStatus.PENDING,
+          VerificationMethod.AI_DOCUMENT,
           new Date(),
-          { reason: 'No registry found for country' },
+          { reason: 'Unsupported country - AI document verification' },
         );
       }
     } catch (error: unknown) {

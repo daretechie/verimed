@@ -24,6 +24,7 @@ import { VerificationLogEntity } from './infrastructure/persistence/entities/ver
 import { TypeOrmVerificationRepository } from './infrastructure/persistence/repositories/typeorm-verification.repository';
 // Services
 import { MonitoringService } from './infrastructure/jobs/monitoring.service';
+import { SanctionsCheckService } from './infrastructure/services/sanctions-check.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 
@@ -74,6 +75,7 @@ import { TerminusModule } from '@nestjs/terminus';
     OpenAiDocumentVerifier,
     TypeOrmVerificationRepository,
     MonitoringService,
+    SanctionsCheckService, // OIG LEIE + GSA SAM exclusion checking
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',
