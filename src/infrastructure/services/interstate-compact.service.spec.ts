@@ -1,4 +1,7 @@
-import { InterstateCompactService, CompactType } from './interstate-compact.service';
+import {
+  InterstateCompactService,
+  CompactType,
+} from './interstate-compact.service';
 
 describe('InterstateCompactService', () => {
   let service: InterstateCompactService;

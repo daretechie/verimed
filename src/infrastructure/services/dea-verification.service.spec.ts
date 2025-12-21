@@ -1,4 +1,7 @@
-import { DeaVerificationService, DeaRegistrantType } from './dea-verification.service';
+import {
+  DeaVerificationService,
+  DeaRegistrantType,
+} from './dea-verification.service';
 import { ConfigService } from '@nestjs/config';
 
 describe('DeaVerificationService', () => {
@@ -73,12 +76,16 @@ describe('DeaVerificationService', () => {
 
   describe('getRegistrantTypeDescription', () => {
     it('should return correct description for physician', () => {
-      const desc = service.getRegistrantTypeDescription(DeaRegistrantType.PHYSICIAN);
+      const desc = service.getRegistrantTypeDescription(
+        DeaRegistrantType.PHYSICIAN,
+      );
       expect(desc).toContain('Physician');
     });
 
     it('should return correct description for mid-level', () => {
-      const desc = service.getRegistrantTypeDescription(DeaRegistrantType.MID_LEVEL);
+      const desc = service.getRegistrantTypeDescription(
+        DeaRegistrantType.MID_LEVEL,
+      );
       expect(desc).toContain('Mid-level');
     });
   });
