@@ -19,14 +19,17 @@ import { OpenAiDocumentVerifier } from './infrastructure/adapters/document/opena
 import { VerificationController } from './infrastructure/controllers/verification.controller';
 import { HealthController } from './infrastructure/controllers/health.controller';
 import { RootController } from './infrastructure/controllers/root.controller';
+import { BadgeController } from './infrastructure/controllers/badge.controller';
 // Persistence
 import { VerificationLogEntity } from './infrastructure/persistence/entities/verification-log.entity';
+import { CredentialBadgeEntity } from './infrastructure/persistence/entities/credential-badge.entity';
 import { TypeOrmVerificationRepository } from './infrastructure/persistence/repositories/typeorm-verification.repository';
 // Services
 import { MonitoringService } from './infrastructure/jobs/monitoring.service';
 import { SanctionsCheckService } from './infrastructure/services/sanctions-check.service';
 import { LeieService } from './infrastructure/services/leie.service';
 import { WebhookService } from './infrastructure/services/webhook.service';
+import { CredentialBadgeService } from './infrastructure/services/credential-badge.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 
@@ -57,13 +60,18 @@ import { TerminusModule } from '@nestjs/terminus';
         };
       },
     }),
-    TypeOrmModule.forFeature([VerificationLogEntity]),
+    TypeOrmModule.forFeature([VerificationLogEntity, CredentialBadgeEntity]),
     ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
     AuthModule,
     TerminusModule,
   ],
-  controllers: [VerificationController, HealthController, RootController],
+  controllers: [
+    VerificationController,
+    HealthController,
+    RootController,
+    BadgeController,
+  ],
   providers: [
     VerifyProviderUseCase,
     // Official Government API Registry Adapters (5 countries)
@@ -80,6 +88,7 @@ import { TerminusModule } from '@nestjs/terminus';
     LeieService, // OIG LEIE database (CSV cache + indexing)
     SanctionsCheckService, // Combined sanctions checking (OIG LEIE + GSA SAM)
     WebhookService, // Webhook notifications for verification events
+    CredentialBadgeService, // Digital credential badges with QR codes
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',
