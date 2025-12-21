@@ -90,6 +90,46 @@ Designed for high-scale, secure deployment.
 ### Fuzzy Identity Validation
 The engine uses **Fuse.js** logic to compare user-provided names with official registry data, allowing for variations (e.g., "Greg" vs "Gregory") while maintaining security.
 
+### Batch Verification
+Verify up to **50 providers** in a single API call:
+```bash
+curl -X POST http://localhost:3000/verify/batch \
+  -H "x-api-key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"providers": [{"providerId": "001", "countryCode": "US", ...}, ...]}'
+```
+
+### Webhook Notifications
+Receive real-time notifications for verification events:
+- `verification.completed` - When verification finishes
+- `verification.expiring_soon` - 14 days before expiration
+- `verification.expired` - When 120-day window passes
+- `batch.completed` - When batch processing finishes
+- `sanctions.match` - When provider is on exclusion list
+
+### Credential Badges with QR Codes
+Generate portable, verifiable credentials for providers:
+- **QR Code Generation** - Instant mobile verification
+- **Short Codes** - 8-character codes for easy sharing (e.g., `ABCD1234`)
+- **Public Verification** - No API key needed for badge verification
+
+### DEA Verification (US)
+Validates DEA registration numbers for controlled substance prescribers:
+- **Checksum Validation** - Official DEA algorithm
+- **Registrant Type Detection** - 16 provider types
+- **Last Name Matching** - Additional fraud prevention
+
+### Interstate Compact Support
+Track multi-state licensure eligibility:
+- **IMLC** - 45 member states (physicians)
+- **NLC** - 42 member states (nurses)
+- Cross-state license sharing validation
+
+### Sanctions Checking
+Federal exclusion list verification for US providers:
+- **OIG LEIE** - Medicare/Medicaid exclusions (monthly CSV cache)
+- **GSA SAM** - Federal debarment list (live API)
+
 ### Deep Health Checks
 Equipped with `@nestjs/terminus` to provide real-time status of upstream dependencies and database connectivity.
 
@@ -163,6 +203,19 @@ curl -X PUT http://localhost:3000/verify/{transactionId}/review \
 ### Health Check
 ```bash
 curl http://localhost:3000/health
+```
+
+### Create Credential Badge
+```bash
+curl -X POST http://localhost:3000/badge \
+  -H "x-api-key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"verificationId": "<TX_ID>", "providerName": "Dr. John Smith"}'
+```
+
+### Verify Badge (Public - No Auth)
+```bash
+curl http://localhost:3000/badge/verify/ABCD1234
 ```
 
 > [!TIP]

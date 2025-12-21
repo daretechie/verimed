@@ -234,6 +234,20 @@ verification_logs (
 | **Expiration Alerts** | Daily 6 AM | Warn of verifications expiring in 14 days |
 | **Auto Reverify** | Weekly | Re-verify expired providers |
 | **LEIE Refresh** | 1st of month | Download fresh OIG exclusion CSV |
+| **Badge Expiration** | Daily | Update expired badge statuses |
+
+---
+
+## Additional Services
+
+| Service | Purpose |
+|---------|---------|
+| **CredentialBadgeService** | QR code badges with 8-char short codes |
+| **DeaVerificationService** | DEA number format/checksum validation |
+| **InterstateCompactService** | IMLC (45 states) + NLC (42 states) mapping |
+| **WebhookService** | 5 event types with HMAC-SHA256 signing |
+| **LeieService** | OIG exclusion list (CSV cache + indexing) |
+| **SanctionsCheckService** | Combined OIG LEIE + GSA SAM checking |
 
 ---
 
@@ -248,3 +262,6 @@ verification_logs (
 | `SAM_API_KEY` | No | GSA SAM API key (higher rate limits) |
 | `WEBHOOK_URL` | No | Webhook endpoint for notifications |
 | `WEBHOOK_SECRET` | No | HMAC secret for webhook signing |
+| `DEA_API_KEY` | No | DEA API key (enables live lookup) |
+| `BASE_URL` | No | Base URL for badge verification links |
+
