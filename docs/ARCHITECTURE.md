@@ -103,6 +103,7 @@ VeriMed follows **Clean Architecture** with dependency inversion:
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
 | `POST` | `/verify` | Submit verification request | API Key |
+| `POST` | `/verify/batch` | Submit batch verification (max 50) | API Key |
 | `GET` | `/verify/:id` | Get verification status | API Key |
 | `PUT` | `/verify/:id/review` | Manual review (approve/reject) | JWT |
 | `GET` | `/health` | Health check | None |
@@ -140,6 +141,25 @@ LEIE database downloads monthly, indexes by NPI and Name for fast lookups.
 
 ---
 
+## Webhook Notifications
+
+VeriMed sends webhook notifications for key events:
+
+| Event | Trigger |
+|-------|---------|
+| `verification.completed` | When a verification finishes |
+| `verification.expiring_soon` | 14 days before expiration |
+| `verification.expired` | When verification window passes |
+| `batch.completed` | When batch verification finishes |
+| `sanctions.match` | When provider is on exclusion list |
+
+**Features:**
+- HMAC-SHA256 signature in `X-Webhook-Signature` header
+- Configurable via `WEBHOOK_URL` and `WEBHOOK_SECRET`
+- 10-second timeout per request
+
+---
+
 ## Verification Flow
 
 ```mermaid
@@ -157,6 +177,7 @@ flowchart TD
     J -->|Yes| K[REJECTED - Sanctioned]
     J -->|No| L[VERIFIED]
     L --> M[Save to DB with expiresAt]
+    M --> N[Send Webhook]
 ```
 
 ---
@@ -202,6 +223,7 @@ verification_logs (
 | **Rate Limiting** | 10 requests/minute (Throttler) |
 | **File Validation** | MIME type + magic bytes |
 | **Input Validation** | class-validator DTOs |
+| **Webhook Signing** | HMAC-SHA256 |
 
 ---
 
@@ -224,3 +246,5 @@ verification_logs (
 | `JWT_SECRET` | Yes | JWT signing secret |
 | `AI_API_KEY` | No | OpenAI API key (enables AI verification) |
 | `SAM_API_KEY` | No | GSA SAM API key (higher rate limits) |
+| `WEBHOOK_URL` | No | Webhook endpoint for notifications |
+| `WEBHOOK_SECRET` | No | HMAC secret for webhook signing |
