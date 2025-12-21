@@ -13,10 +13,10 @@ VeriMed uses the **Ports and Adapters** pattern. Each country adapter:
 
 Before adding a country, verify that:
 
-1. ✅ A **public API** exists (free or with registration)
+1. ✅ An **API or data source** exists (official government preferred)
 2. ✅ The API returns **license/registration status**
 3. ✅ The API accepts **license number** as input
-4. ✅ No **legal restrictions** on programmatic access
+4. ✅ No **legal restrictions** on programmatic access (no web scraping)
 
 ## Creating a New Adapter
 
@@ -85,41 +85,63 @@ YourCountryRegistryAdapter,
 
 ## AI Fallback
 
-For countries without official free government APIs, VeriMed uses AI document verification. **Document upload is required** for unsupported countries.
+For countries without official APIs, VeriMed uses AI document verification. **Document upload is required** for unsupported countries.
 
-## Currently Supported Countries (Official Government APIs)
+---
 
-We only include countries with **free, official government APIs** for reliable Primary Source Verification:
+## Currently Supported Countries
 
-| Country | Registry | API Source | Status |
-|---------|----------|------------|--------|
-| 🇺🇸 **USA** | NPI (NPPES) | CMS Federal Gov | ✅ Live |
-| 🇫🇷 **France** | RPPS (ANS) | Agence du Numérique en Santé | ✅ Live |
-| 🇦🇪 **UAE** | DHA | Dubai Pulse Gov Portal | ✅ Live |
-| 🇳🇱 **Netherlands** | BIG-register | CIBG Gov Agency | ✅ Live |
-| 🇮🇱 **Israel** | MOH | data.gov.il | ✅ Live |
+| Country | Registry | API Source | Type | Status |
+|---------|----------|------------|------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | CMS Federal Gov | Free | ✅ Live |
+| 🇫🇷 **France** | RPPS (ANS) | Agence du Numérique en Santé | Free | ✅ Live |
+| 🇦🇪 **UAE** | DHA | Dubai Pulse Gov Portal | Free | ✅ Live |
+| 🇳🇱 **Netherlands** | BIG-register | CIBG Gov Agency | Free | ✅ Live |
+| 🇮🇱 **Israel** | MOH | data.gov.il | Free | ✅ Live |
 
-### Adding a New Country
+---
+
+## Adding a New Country
 
 > [!IMPORTANT]
-> We only accept new country adapters that use **free, official government APIs**.
-> Third-party paid APIs (RapidAPI, etc.) and web scraping are not accepted.
+> We welcome contributions for new countries! We prioritize:
+> 1. **Free, official government APIs** (best for open-source)
+> 2. **Paid official APIs** (if no free option exists)
+> 3. **Regulatory-compliant third-party services** (last resort)
 
-**Requirements for new country adapters:**
-1. Must use an **official government API** (no third-party aggregators)
-2. Must be **free** (no paid API keys required)
-3. No **web scraping** (violates ToS, unreliable)
-4. Include **unit tests** with 100% coverage
+### Contribution Priority
 
-### Countries We'd Love to Add (If Official APIs Exist)
+| Priority | Source Type | Requirements |
+|----------|-------------|--------------|
+| 🥇 **Highest** | Free official government API | Document the API source |
+| 🥈 **High** | Paid official government API | Document pricing, include env var for API key |
+| 🥉 **Acceptable** | Regulatory-compliant third-party | Must be from reputable provider, document compliance |
+| ❌ **Not Accepted** | Web scraping | Violates ToS, unreliable, legal risk |
 
-| Country | Registry | Notes |
-|---------|----------|-------|
-| 🇦🇺 **Australia** | AHPRA | Has API but requires commercial contract |
-| 🇯🇵 **Japan** | JMA | Need contributor to research |
-| 🇩🇪 **Germany** | BÄK | No public API found |
-| 🇧🇷 **Brazil** | CFM | Paid web service (R$772/year) |
+### Requirements for All Adapters
 
+1. **Official or reputable source** (government preferred)
+2. **No web scraping** (violates Terms of Service)
+3. **Include unit tests** with high coverage
+4. **Document the API** (pricing, registration, limitations)
+5. **Add environment variable** for API keys if paid
+
+### Countries We'd Love to Add
+
+| Country | Registry | Notes | Type |
+|---------|----------|-------|------|
+| 🇦🇺 **Australia** | AHPRA | Commercial API available | Paid |
+| 🇬🇧 **UK** | GMC | Paid API (£5,000+/year) | Paid |
+| 🇯🇵 **Japan** | JMA | Need contributor to research | Unknown |
+| 🇩🇪 **Germany** | BÄK | No public API found | N/A |
+| 🇧🇷 **Brazil** | CFM | Paid web service (R$772/year) | Paid |
+| 🇨🇦 **Canada** | CPSO | Province-level APIs | Mixed |
+| 🇮🇳 **India** | NMC | Surepass available | Paid |
+| 🇸🇦 **Saudi Arabia** | SCFHS | No official API | N/A |
+| 🇿🇦 **South Africa** | HPCSA | Need contributor to research | Unknown |
+| 🇳🇬 **Nigeria** | MDCN | Need contributor to research | Unknown |
+
+---
 
 ## Testing Requirements
 
@@ -133,17 +155,27 @@ When adding a new adapter, please include:
 
 ---
 
-## Upcoming Features
+## Implemented Features ✅
 
-VeriMed is actively developing these enterprise features:
+| Feature | Status | Details |
+|---------|--------|---------|
+| **Batch Verification** | ✅ Done | POST /verify/batch (up to 50 providers) |
+| **OIG LEIE Sanctions** | ✅ Done | CSV cache with monthly refresh |
+| **GSA SAM Sanctions** | ✅ Done | Live API integration |
+| **Webhook Notifications** | ✅ Done | 5 event types with HMAC signing |
+| **120-Day Verification Windows** | ✅ Done | Auto-alerts and re-verification |
+| **Continuous Monitoring** | ✅ Done | Daily/weekly scheduled jobs |
+
+## Planned Features
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| **Batch Verification** | Verify hundreds of providers in one API call | 🚧 Planned |
-| **Global Sanctions Checking** | OIG LEIE, SAM.gov, UK GMC FtP, OFAC | 🚧 Planned |
-| **Continuous Monitoring** | Automated license expiration alerts | 🚧 Planned |
 | **Credential Wallet** | Digital badges with QR verification | 🚧 Planned |
 | **Interstate Compact Support** | IMLC/NLC recognition | 🚧 Planned |
+| **NPDB Integration** | National Practitioner Data Bank | 🚧 Planned |
+| **DEA Verification** | Drug Enforcement Administration | 🚧 Planned |
+| **ABMS Board Verification** | Specialty certifications | 🚧 Planned |
+| **Mobile SDK** | iOS/Android verification | 🚧 Planned |
 
 ---
 
