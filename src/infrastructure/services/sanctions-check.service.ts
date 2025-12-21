@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { LeieService } from './leie.service';
 
 /**
  * Sanctions Check Result
@@ -50,16 +51,13 @@ export class SanctionsCheckService {
   private readonly logger = new Logger(SanctionsCheckService.name);
 
   // GSA SAM.gov API endpoint (free, requires API key for higher limits)
-  private readonly SAM_API_BASE = 'https://api.sam.gov/entity-information/v3';
   private readonly SAM_EXCLUSIONS_API =
     'https://api.sam.gov/entity-information/v3/exclusions';
 
-  // OIG LEIE - No direct API, but we can use a local cache or third-party
-  // For now, we'll use the online search endpoint
-  private readonly OIG_SEARCH_URL =
-    'https://exclusions.oig.hhs.gov/api/exclusions';
-
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @Optional() private readonly leieService?: LeieService,
+  ) {}
 
   /**
    * Check if a provider is on any sanctions/exclusion list
@@ -158,10 +156,7 @@ export class SanctionsCheckService {
 
   /**
    * Check OIG LEIE (List of Excluded Individuals/Entities)
-   * The OIG doesn't have a public API, but provides downloadable CSV files
-   * For production, consider:
-   * 1. Downloading and caching the monthly CSV
-   * 2. Using a third-party service that aggregates exclusion data
+   * Uses locally cached CSV database updated monthly from OIG
    */
   private checkOigLeie(
     npi?: string,
@@ -174,26 +169,42 @@ export class SanctionsCheckService {
       return matches;
     }
 
-    try {
-      // Note: OIG doesn't have a direct public API
-      // In production, implement one of:
-      // 1. Local database with monthly LEIE downloads
-      // 2. Third-party exclusion screening service
-      // For now, log that this would be checked
+    // If LeieService is not available, log and return empty
+    if (!this.leieService) {
       this.logger.debug(
-        `OIG LEIE check would be performed for: ${firstName} ${lastName} (NPI: ${npi || 'N/A'})`,
+        `[OIG LEIE] LeieService not available - skipping check for: ${firstName} ${lastName}`,
       );
+      return matches;
+    }
 
-      // Placeholder - in production, query local LEIE database
-      // const leieResults = await this.leieDatabase.search({
-      //   npi,
-      //   firstName,
-      //   lastName,
-      // });
+    try {
+      // Search the locally cached LEIE database
+      const result = this.leieService.search(npi, firstName, lastName);
+
+      if (result.isExcluded) {
+        for (const record of result.matches) {
+          matches.push({
+            source: 'OIG_LEIE',
+            name: `${record.firstName} ${record.lastName}`.trim(),
+            npi: record.npi,
+            exclusionType: record.exclType,
+            exclusionDate: record.exclDate,
+            state: record.state,
+          });
+        }
+
+        this.logger.warn(
+          `[OIG LEIE] EXCLUDED: Found ${result.matches.length} matches for ${firstName} ${lastName}`,
+        );
+      } else {
+        this.logger.debug(
+          `[OIG LEIE] CLEAR: No exclusions found for ${firstName} ${lastName}`,
+        );
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      this.logger.warn(`OIG LEIE check failed: ${errorMessage}`);
+      this.logger.warn(`[OIG LEIE] Check failed: ${errorMessage}`);
     }
 
     return matches;

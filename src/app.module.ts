@@ -25,6 +25,7 @@ import { TypeOrmVerificationRepository } from './infrastructure/persistence/repo
 // Services
 import { MonitoringService } from './infrastructure/jobs/monitoring.service';
 import { SanctionsCheckService } from './infrastructure/services/sanctions-check.service';
+import { LeieService } from './infrastructure/services/leie.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 
@@ -75,7 +76,8 @@ import { TerminusModule } from '@nestjs/terminus';
     OpenAiDocumentVerifier,
     TypeOrmVerificationRepository,
     MonitoringService,
-    SanctionsCheckService, // OIG LEIE + GSA SAM exclusion checking
+    LeieService, // OIG LEIE database (CSV cache + indexing)
+    SanctionsCheckService, // Combined sanctions checking (OIG LEIE + GSA SAM)
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',
