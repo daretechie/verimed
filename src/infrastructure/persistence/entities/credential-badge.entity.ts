@@ -44,10 +44,10 @@ export class CredentialBadgeEntity {
   @Index()
   status: 'ACTIVE' | 'EXPIRED' | 'REVOKED' | 'SUSPENDED';
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   issuedAt: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   @Index()
   expiresAt: Date;
 
@@ -61,7 +61,7 @@ export class CredentialBadgeEntity {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   lastVerifiedAt: Date;
 
   @Column({ default: 0 })
