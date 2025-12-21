@@ -15,7 +15,7 @@ import {
  *
  * LIVE API INTEGRATION
  * Source: Dubai Pulse Open Data Portal
- * API: https://www.dubaipulse.gov.ae/
+ * API: https://api.dubaipulse.gov.ae/
  * Dataset: dha_sheryan_professional_detail-open-api
  *
  * Note: The API provides details of active health professionals in Dubai.
@@ -24,9 +24,9 @@ import {
 @Injectable()
 export class AeDhaRegistryAdapter implements IRegistryAdapter {
   private readonly logger = new Logger(AeDhaRegistryAdapter.name);
-  // Dubai Pulse API endpoint (example - actual endpoint may vary)
+  // Dubai Pulse API endpoint for Sheryan professional details
   private readonly API_BASE =
-    'https://data.dubaipulse.gov.ae/api/records/1.0/search/';
+    'https://api.dubaipulse.gov.ae/open/dha/dha_sheryan_professional_detail-open-api/1.0.0';
 
   supports(countryCode: string): boolean {
     return countryCode === 'AE';

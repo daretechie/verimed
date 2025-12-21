@@ -51,4 +51,18 @@ If you are using VeriMed to process PHI on behalf of a covered entity, ensure yo
 
 ---
 
+## 7. Upcoming Enterprise Compliance Features
+
+VeriMed is developing the following compliance-enhancing features:
+
+| Feature | Compliance Benefit |
+|---------|-------------------|
+| **Global Sanctions Checking** | Screen providers against OIG LEIE, SAM.gov, OFAC, UK GMC FtP |
+| **Continuous Monitoring** | Automated alerts for license expirations, suspensions, revocations |
+| **Batch Verification API** | Efficient bulk credentialing for enterprise onboarding |
+| **Audit Log Enhancements** | Immutable logs for SOC 2 compliance |
+
+---
+
 *Disclaimer: This guide is for informational purposes and does not constitute legal advice. Please consult with your compliance officer.*
+

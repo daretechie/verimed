@@ -12,24 +12,49 @@ VeriMed is a professional-grade, hybrid verification platform designed to valida
 
 Check out our [Architecture Decision Records (ADR)](docs/adr) to understand the design choices behind VeriMed.
 
+---
 
+## 🚨 The Problem
+
+Healthcare fraud costs **$68 billion annually**. In 2025, the DOJ charged 193 defendants in telemedicine fraud totaling $1.17 billion. Yet there's no unified, affordable way to verify if a "doctor" is actually licensed.
+
+**Current reality:**
+- 50+ different U.S. state licensing requirements
+- Every country has different APIs (REST, SOAP, FHIR, CKAN)
+- Enterprise solutions cost $25K-$50K+/year
+- Manual credentialing takes **months** per provider
+
+**VeriMed solves this** with a single API that connects to 12+ national registries and falls back to AI verification when registries aren't available.
+
+> 💡 **Want to help expand global coverage?** Contributors with knowledge of their country's medical registry can help add new adapters! See our [Contribution Guide](CONTRIBUTING.md).
+
+---
 
 ## 🌍 Global Coverage
 
-VeriMed now integrates with **7 national medical registries** across 4 continents:
+VeriMed integrates with **5 official government medical registries** via free public APIs:
 
-| Country | Registry | API Technology | Key Access |
-|---------|----------|----------------|------------|
-| 🇺🇸 **USA** | NPI (NPPES) | REST | Public |
-| 🇫🇷 **France** | RPPS (ANS) | FHIR | Public |
-| 🇦🇪 **UAE** | DHA (Dubai Pulse) | REST | Public |
-| 🇰🇪 **Kenya** | KMPDC | REST | `KE_INTELLEX_API_KEY` |
-| 🇳🇱 **Netherlands** | BIG-register | **SOAP** | Public |
-| 🇮🇱 **Israel** | MOH | **CKAN** | Public |
-| 🇲🇽 **Mexico** | SEP | REST | `MX_RAPIDAPI_KEY` |
+| Country | Registry | API Technology | Source |
+|---------|----------|----------------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | REST | CMS Federal Gov |
+| 🇫🇷 **France** | RPPS (ANS) | FHIR v2 | Agence du Numérique en Santé |
+| 🇦🇪 **UAE** | DHA | REST | Dubai Pulse Gov Portal |
+| 🇳🇱 **Netherlands** | BIG-register | SOAP | CIBG Gov Agency |
+| 🇮🇱 **Israel** | MOH | CKAN | data.gov.il |
 
-> [!TIP]
-> **Faster High-Security Verification**: For countries without a live API registry, uploading **both** a Medical License and a National ID/Passport will result in significantly faster automated verification and higher confidence scores.
+### 🤖 AI Document Verification (All Other Countries)
+
+For countries **without official free APIs**, VeriMed uses AI-powered document verification:
+
+| Feature | Description |
+|---------|-------------|
+| **Document Required** | Medical license/certificate upload is mandatory |
+| **AI Analysis** | OpenAI Vision extracts and validates credentials |
+| **Confidence Scoring** | 0-100% confidence based on document quality |
+| **Audit Trail** | All uploads logged for compliance |
+
+> [!IMPORTANT]
+> For unsupported countries, uploading a valid **Medical License** document is **required**. Adding a **National ID/Passport** increases confidence scores.
 
 ---
 
