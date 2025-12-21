@@ -48,7 +48,7 @@ describe('VeriMed System (E2E)', () => {
       });
 
     jwtToken = (loginResponse.body as LoginResponse).access_token;
-  });
+  }, 30000); // 30s timeout for database connection
 
   afterAll(async () => {
     if (app) {
