@@ -26,6 +26,7 @@ import { TypeOrmVerificationRepository } from './infrastructure/persistence/repo
 import { MonitoringService } from './infrastructure/jobs/monitoring.service';
 import { SanctionsCheckService } from './infrastructure/services/sanctions-check.service';
 import { LeieService } from './infrastructure/services/leie.service';
+import { WebhookService } from './infrastructure/services/webhook.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 
@@ -78,6 +79,7 @@ import { TerminusModule } from '@nestjs/terminus';
     MonitoringService,
     LeieService, // OIG LEIE database (CSV cache + indexing)
     SanctionsCheckService, // Combined sanctions checking (OIG LEIE + GSA SAM)
+    WebhookService, // Webhook notifications for verification events
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',

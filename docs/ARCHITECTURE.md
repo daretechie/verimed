@@ -12,7 +12,7 @@ VeriMed is a healthcare credential verification API built for **NCQA 2025 compli
 
 | Layer | Technology |
 |-------|------------|
-| **Runtime** | Node.js 20+ |
+| **Runtime** | Node.js 22+ |
 | **Framework** | NestJS 10 |
 | **Database** | PostgreSQL (prod) / SQLite (dev) |
 | **ORM** | TypeORM |
