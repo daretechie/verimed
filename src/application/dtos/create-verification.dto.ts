@@ -8,7 +8,7 @@ export class CreateVerificationDto {
   })
   @IsString()
   @IsNotEmpty()
-  providerId: string;
+  providerId!: string;
 
   @ApiProperty({
     example: 'US',
@@ -16,17 +16,17 @@ export class CreateVerificationDto {
   })
   @IsString()
   @IsNotEmpty()
-  countryCode: string;
+  countryCode!: string;
 
   @ApiProperty({ example: 'Gregory' })
   @IsString()
   @IsNotEmpty()
-  firstName: string;
+  firstName!: string;
 
   @ApiProperty({ example: 'House' })
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  lastName!: string;
 
   @ApiProperty({
     example: '1234567893',
@@ -34,7 +34,7 @@ export class CreateVerificationDto {
   })
   @IsString()
   @IsNotEmpty()
-  licenseNumber: string;
+  licenseNumber!: string;
 
   @ApiPropertyOptional({
     example: '1959-05-15',

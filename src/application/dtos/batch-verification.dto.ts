@@ -40,7 +40,7 @@ export class BatchVerificationDto {
   @ArrayMaxSize(50, { message: 'Maximum 50 providers per batch' })
   @ValidateNested({ each: true })
   @Type(() => CreateVerificationDto)
-  providers: CreateVerificationDto[];
+  providers!: CreateVerificationDto[];
 }
 
 /**

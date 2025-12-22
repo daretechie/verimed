@@ -4,18 +4,16 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import helmet from 'helmet';
-import * as compression from 'compression';
+import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Security: Set various HTTP headers to help protect the app
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  app.use((helmet as any)());
+  app.use(helmet());
 
   // Performance: Compress response bodies
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  app.use((compression as any)());
+  app.use(compression());
 
   // CORS Configuration
   const corsOrigins = process.env.CORS_ORIGINS?.split(',') ?? '*';

@@ -52,6 +52,7 @@ For countries **without official free APIs**, VeriMed uses AI-powered document v
 | **AI Analysis** | OpenAI Vision extracts and validates credentials |
 | **Confidence Scoring** | 0-100% confidence based on document quality |
 | **Audit Trail** | All uploads logged for compliance |
+| **BYOK Architecture** | **Bring Your Own Key**: You strictly control your own OpenAI API keys. Data never leaves your control. |
 
 > [!IMPORTANT]
 > For unsupported countries, uploading a valid **Medical License** document is **required**. Adding a **National ID/Passport** increases confidence scores.
@@ -70,6 +71,7 @@ Designed for local development and rapid testing.
   ```bash
   npm install
   cp .env.example .env
+  npm run generate-secrets  # <--- CRITICAL: Generates secure keys for .env
   npm run start:dev
   ```
 

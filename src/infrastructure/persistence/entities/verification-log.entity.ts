@@ -16,42 +16,42 @@ const VERIFICATION_WINDOW_DAYS = 120;
 @Entity('verification_logs')
 export class VerificationLogEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
   @Index()
-  providerId: string;
+  providerId!: string;
 
   @Column()
   @Index()
-  countryCode: string;
+  countryCode!: string;
 
   @Column()
-  status: string; // VERIFIED, REJECTED, PENDING, MANUAL_REVIEW
+  status!: string; // VERIFIED, REJECTED, PENDING, MANUAL_REVIEW
 
   @Column()
-  method: string; // API_REGISTRY, AI_DOCUMENT
+  method!: string; // API_REGISTRY, AI_DOCUMENT
 
   @Column('float')
-  confidenceScore: number;
+  confidenceScore!: number;
 
   @Column('simple-json', { nullable: true })
-  attributes: Record<string, unknown>;
+  attributes!: Record<string, unknown>;
 
   @Column('simple-json', { nullable: true })
-  metadata: Record<string, unknown>;
+  metadata!: Record<string, unknown>;
 
   @CreateDateColumn()
   @Index()
-  timestamp: Date;
+  timestamp!: Date;
 
   /**
    * Verification expiration date (120 days from verification)
    * NCQA 2025 requires re-verification after this window
    */
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   @Index()
-  expiresAt: Date | null;
+  expiresAt!: Date | null;
 
   /**
    * Source of verification for audit purposes
@@ -60,7 +60,7 @@ export class VerificationLogEntity {
    * THIRD_PARTY = Delegated verification (not currently used)
    */
   @Column({ default: 'PRIMARY_SOURCE' })
-  verificationSource: string;
+  verificationSource!: string;
 
   /**
    * Check if this verification has expired (past 120-day window)

@@ -34,6 +34,7 @@ import { DeaVerificationService } from './infrastructure/services/dea-verificati
 import { InterstateCompactService } from './infrastructure/services/interstate-compact.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
+import { LicenseService } from './infrastructure/licensing/license.service';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { TerminusModule } from '@nestjs/terminus';
     CredentialBadgeService, // Digital credential badges with QR codes
     DeaVerificationService, // DEA registration number validation
     InterstateCompactService, // IMLC/NLC state compact eligibility
+    LicenseService, // Enterprise License Management
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',

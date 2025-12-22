@@ -1,6 +1,8 @@
 {
-  "name": "verimed",
+  "name": "verimed-core",
   "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "description": "Open Source Medical Provider Verification API",
   "author": "Dare Adeleke <deeprince2020@gmail.com>",
   "contributors": [

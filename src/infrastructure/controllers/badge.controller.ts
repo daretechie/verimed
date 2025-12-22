@@ -25,8 +25,8 @@ import { ApiKeyGuard } from '../guards/api-key.guard';
  * Create Badge DTO
  */
 class CreateBadgeDto {
-  verificationId: string;
-  providerName: string;
+  verificationId!: string;
+  providerName!: string;
   specialty?: string;
 }
 

@@ -15,57 +15,57 @@ import {
 @Entity('credential_badges')
 export class CredentialBadgeEntity {
   @PrimaryColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
   @Index()
-  providerId: string;
+  providerId!: string;
 
   @Column()
   @Index()
-  verificationId: string;
+  verificationId!: string;
 
   @Column()
-  providerName: string;
+  providerName!: string;
 
   @Column()
-  countryCode: string;
+  countryCode!: string;
 
   @Column({ nullable: true })
-  licenseNumber: string;
+  licenseNumber!: string;
 
   @Column({ nullable: true })
-  specialty: string;
+  specialty!: string;
 
   @Column({
     type: 'varchar',
     default: 'ACTIVE',
   })
   @Index()
-  status: 'ACTIVE' | 'EXPIRED' | 'REVOKED' | 'SUSPENDED';
+  status!: 'ACTIVE' | 'EXPIRED' | 'REVOKED' | 'SUSPENDED';
 
-  @Column({ type: 'timestamp' })
-  issuedAt: Date;
+  @Column()
+  issuedAt!: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   @Index()
-  expiresAt: Date;
+  expiresAt!: Date;
 
   @Column({ type: 'text', nullable: true })
-  qrCodeDataUrl: string;
+  qrCodeDataUrl!: string;
 
   @Column({ type: 'varchar', length: 64 })
   @Index({ unique: true })
-  shortCode: string; // 8-char unique code for easy sharing
+  shortCode!: string; // 8-char unique code for easy sharing
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
-  lastVerifiedAt: Date;
+  @Column({ nullable: true })
+  lastVerifiedAt!: Date;
 
   @Column({ default: 0 })
-  verificationCount: number;
+  verificationCount!: number;
 
   /**
    * Check if the badge is still valid

@@ -36,6 +36,7 @@ import { VerificationRequest } from '../../domain/entities/verification-request.
 import type { IVerificationRepository } from '../../domain/ports/verification-repository.port';
 import { ReviewVerificationDto } from '../../application/dtos/review-verification.dto';
 import { ApiKeyGuard } from '../guards/api-key.guard';
+import { EnterpriseGuard } from '../guards/enterprise.guard';
 import { WebhookService } from '../services/webhook.service';
 
 @ApiTags('Verification')
@@ -170,8 +171,13 @@ export class VerificationController {
   }
 
   @Post('batch')
-  @ApiOperation({ summary: 'Submit multiple providers for batch verification' })
+  @UseGuards(EnterpriseGuard)
+  @ApiOperation({
+    summary: 'Submit multiple providers for batch verification',
+    description: 'Requires Enterprise License',
+  })
   @ApiResponse({ status: 201, description: 'Batch verification processed.' })
+  @ApiResponse({ status: 403, description: 'Requires Enterprise License.' })
   @ApiBody({ type: BatchVerificationDto })
   async verifyBatch(
     @Body() dto: BatchVerificationDto,
