@@ -111,7 +111,12 @@
     "rimraf": "^5.0.0",
     "inflight": "npm:lru-cache@^10.0.0",
     "@npmcli/move-file": "npm:@npmcli/fs@^3.0.0",
-    "test-exclude": "^7.0.0"
+    "test-exclude": "^7.0.0",
+    "node-gyp": {
+      "npmlog": "npm:console-log-level@^2.0.0",
+      "gauge": "npm:console-log-level@^2.0.0",
+      "are-we-there-yet": "npm:console-log-level@^2.0.0"
+    }
   },
   "jest": {
     "moduleFileExtensions": [
@@ -125,7 +130,10 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!main.ts",
+      "!index.ts",
+      "!**/migrations/**"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

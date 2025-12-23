@@ -1,3 +1,10 @@
+// Set required environment variables before importing AppModule
+// This must happen at the top of the file, before any imports that trigger module loading
+process.env.API_KEY = 'mock-api-key';
+process.env.JWT_SECRET = 'mock-jwt-secret';
+process.env.ADMIN_PASS = 'mock-admin-pass';
+process.env.NODE_ENV = 'test';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -9,11 +16,6 @@ describe('Enterprise Features (E2E)', () => {
   // 1. Test without License Key (Community Edition)
   describe('Community Edition (No License)', () => {
     beforeEach(async () => {
-      // Set required config first
-      process.env.API_KEY = 'mock-api-key';
-      process.env.JWT_SECRET = 'mock-jwt-secret';
-      process.env.ADMIN_PASS = 'mock-admin-pass';
-
       // Ensure NO license key is present
       delete process.env.LICENSE_KEY;
 
@@ -37,7 +39,6 @@ describe('Enterprise Features (E2E)', () => {
         .post('/verify/batch')
         .set('x-api-key', 'mock-api-key')
         .send({ providers: [] })
-        .expect(403)
         .expect(403);
     });
   });
@@ -45,10 +46,6 @@ describe('Enterprise Features (E2E)', () => {
   // 2. Test with Valid License Key (Enterprise Edition)
   describe('Enterprise Edition (Valid License)', () => {
     beforeEach(async () => {
-      process.env.API_KEY = 'mock-api-key';
-      process.env.JWT_SECRET = 'mock-jwt-secret';
-      process.env.ADMIN_PASS = 'mock-admin-pass';
-
       // Set valid license
       process.env.LICENSE_KEY = 'ENT-TEST-KEY-123';
 

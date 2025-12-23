@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# Ensure only one workflow runs per branch/PR at a time
+# New commits cancel in-progress runs to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,6 +54,8 @@ jobs:
         run: npm run test:e2e
         env:
           API_KEY: verimed-secret
+          JWT_SECRET: e2e-test-jwt-secret-key
+          ADMIN_PASS: e2e-test-admin-pass
           DATABASE_URL: postgres://verimed_user:secret_password@localhost:5432/verimed_db
 
   docker:
