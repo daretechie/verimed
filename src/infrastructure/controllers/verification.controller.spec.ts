@@ -7,6 +7,7 @@ import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiKeyGuard } from '../guards/api-key.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { EnterpriseGuard } from '../guards/enterprise.guard';
 
 describe('VerificationController', () => {
   let controller: VerificationController;
@@ -59,6 +60,8 @@ describe('VerificationController', () => {
       .overrideGuard(ApiKeyGuard)
       .useValue({ canActivate: () => true })
       .overrideGuard(AuthGuard('jwt'))
+      .useValue({ canActivate: () => true })
+      .overrideGuard(EnterpriseGuard)
       .useValue({ canActivate: () => true })
       .compile();
 
