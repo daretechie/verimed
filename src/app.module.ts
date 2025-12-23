@@ -30,8 +30,7 @@ import { SanctionsCheckService } from './infrastructure/services/sanctions-check
 import { LeieService } from './infrastructure/services/leie.service';
 import { WebhookService } from './infrastructure/services/webhook.service';
 import { CredentialBadgeService } from './infrastructure/services/credential-badge.service';
-import { DeaVerificationService } from './infrastructure/services/dea-verification.service';
-import { InterstateCompactService } from './infrastructure/services/interstate-compact.service';
+
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { LicenseService } from './infrastructure/licensing/license.service';
@@ -92,8 +91,7 @@ import { LicenseService } from './infrastructure/licensing/license.service';
     SanctionsCheckService, // Combined sanctions checking (OIG LEIE + GSA SAM)
     WebhookService, // Webhook notifications for verification events
     CredentialBadgeService, // Digital credential badges with QR codes
-    DeaVerificationService, // DEA registration number validation
-    InterstateCompactService, // IMLC/NLC state compact eligibility
+
     LicenseService, // Enterprise License Management
     // Dependency Injection Bindings
     {
