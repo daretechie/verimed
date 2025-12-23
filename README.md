@@ -63,6 +63,43 @@ For countries **without official free APIs**, VeriMed uses AI-powered document v
 
 VeriMed is designed for both rapid exploration by developers and robust deployment by DevOps engineers.
 
+## 🚀 Quick Start
+
+### Quick Start (Source)
+Since VeriMed is currently in active development, valid extraction from source is the recommended method.
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/daretechie/verimed.git
+    cd verimed
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Generate Secrets**
+    ```bash
+    npm run generate-secrets
+    ```
+
+4.  **Start the Server**
+    ```bash
+    npm run start:dev
+    ```
+
+## 💎 Enterprise Edition
+Need **SSO (Okta/Azure)**, **Batch Verification**, or **Audit Logs**?
+Upgrade to VeriMed Enterprise to unlock these features effectively.
+
+- [x] **Single Sign-On (SAML 2.0)**
+- [x] **Batch Processing APIs**
+- [x] **Dedicated Support**
+
+[**Contact Sales for a License Key**](mailto:sales@verimed.com) or [**Read the Docs**](docs/ENTERPRISE.md).
+
+## 🔒 Configuration
 ### 1. The Developer Path (KISS)
 Designed for local development and rapid testing.
 - **Database:** Auto-configured SQLite (`verimed.sqlite`).
