@@ -13,9 +13,9 @@ describe('Enterprise Features (E2E)', () => {
       process.env.API_KEY = 'mock-api-key';
       process.env.JWT_SECRET = 'mock-jwt-secret';
       process.env.ADMIN_PASS = 'mock-admin-pass';
-      
+
       // Ensure NO license key is present
-      delete process.env.LICENSE_KEY; 
+      delete process.env.LICENSE_KEY;
 
       const moduleFixture: TestingModule = await Test.createTestingModule({
         imports: [AppModule],
@@ -32,12 +32,13 @@ describe('Enterprise Features (E2E)', () => {
     });
 
     it('/verify/batch (POST) should return 403 Forbidden', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return request(app.getHttpServer())
         .post('/verify/batch')
         .set('x-api-key', 'mock-api-key')
         .send({ providers: [] })
         .expect(403)
-        .expect((res) => {
+        .expect((_res) => {
           // Joi/Nest might return different error structures, but 403 is key
           // The guard throws ForbiddenException
         });
@@ -50,7 +51,7 @@ describe('Enterprise Features (E2E)', () => {
       process.env.API_KEY = 'mock-api-key';
       process.env.JWT_SECRET = 'mock-jwt-secret';
       process.env.ADMIN_PASS = 'mock-admin-pass';
-      
+
       // Set valid license
       process.env.LICENSE_KEY = 'ENT-TEST-KEY-123';
 
@@ -71,6 +72,7 @@ describe('Enterprise Features (E2E)', () => {
     it('/verify/batch (POST) should be allowed (429/400/201)', () => {
       // It might return 400 because body is empty/invalid or 201 if valid
       // But it should NOT return 403
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return request(app.getHttpServer())
         .post('/verify/batch')
         .set('x-api-key', 'mock-api-key')
@@ -87,7 +89,7 @@ describe('Enterprise Features (E2E)', () => {
         })
         .expect((res) => {
           expect(res.status).not.toBe(403);
-          // It might be 201 or 400 depending on deep validation, 
+          // It might be 201 or 400 depending on deep validation,
           // let's accept anything that isn't Forbidden.
         });
     });

@@ -30,6 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const correlationId = crypto.randomUUID();
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
       const errorMsg =
         exception instanceof Error ? exception.message : String(exception);

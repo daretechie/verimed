@@ -10,7 +10,7 @@ import { LicenseService } from '../licensing/license.service';
 export class EnterpriseGuard implements CanActivate {
   constructor(private readonly licenseService: LicenseService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  canActivate(_context: ExecutionContext): boolean {
     if (!this.licenseService.isValid()) {
       throw new ForbiddenException(
         'This feature requires a VeriMed Enterprise License. Please upgrade to access.',
