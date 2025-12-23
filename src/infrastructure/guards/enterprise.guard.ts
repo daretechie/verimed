@@ -10,6 +10,7 @@ import { LicenseService } from '../licensing/license.service';
 export class EnterpriseGuard implements CanActivate {
   constructor(private readonly licenseService: LicenseService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(_context: ExecutionContext): boolean {
     if (!this.licenseService.isValid()) {
       throw new ForbiddenException(

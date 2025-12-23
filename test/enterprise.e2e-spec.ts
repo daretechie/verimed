@@ -38,10 +38,7 @@ describe('Enterprise Features (E2E)', () => {
         .set('x-api-key', 'mock-api-key')
         .send({ providers: [] })
         .expect(403)
-        .expect((_res) => {
-          // Joi/Nest might return different error structures, but 403 is key
-          // The guard throws ForbiddenException
-        });
+        .expect(403);
     });
   });
 
