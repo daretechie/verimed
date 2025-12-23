@@ -15,8 +15,12 @@ import {
  *
  * LIVE API INTEGRATION
  * Source: Agence du Numérique en Santé
- * API: https://gateway.api.esante.gouv.fr/fhir/v1
- * Documentation: https://esante.gouv.fr/produits-services/annuaire-sante
+ * API: https://gateway.api.esante.gouv.fr/fhir/v2
+ * Documentation: https://ansforge.github.io/annuaire-sante-fhir-documentation/
+ * Portal: https://esante.gouv.fr/produits-services/annuaire-sante
+ *
+ * Authentication: Requires ESANTE-API-KEY header
+ * Get API key: https://portal.api.esante.gouv.fr
  *
  * The API uses FHIR R4 standard and provides access to
  * the RPPS (Répertoire Partagé des Professionnels de Santé)
@@ -24,7 +28,8 @@ import {
 @Injectable()
 export class FrAnsRegistryAdapter implements IRegistryAdapter {
   private readonly logger = new Logger(FrAnsRegistryAdapter.name);
-  private readonly API_BASE = 'https://gateway.api.esante.gouv.fr/fhir/v1';
+  // Updated to v2 API (verified December 2025)
+  private readonly API_BASE = 'https://gateway.api.esante.gouv.fr/fhir/v2';
 
   supports(countryCode: string): boolean {
     return countryCode === 'FR';

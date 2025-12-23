@@ -6,28 +6,35 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { validationSchema } from './common/config/validation.schema';
 import { VerifyProviderUseCase } from './application/use-cases/verify-provider.use-case';
-// Registry Adapters - Live API Countries Only
+// Registry Adapters - Official Government APIs Only (5 countries)
 import { UsNpiRegistryAdapter } from './infrastructure/adapters/registry/us-npi.adapter';
 import { FrAnsRegistryAdapter } from './infrastructure/adapters/registry/fr-ans.adapter';
 import { AeDhaRegistryAdapter } from './infrastructure/adapters/registry/ae-dha.adapter';
-import { KeKmpdcRegistryAdapter } from './infrastructure/adapters/registry/ke-kmpdc.adapter';
 import { NlBigRegistryAdapter } from './infrastructure/adapters/registry/nl-big.adapter';
 import { IlMohRegistryAdapter } from './infrastructure/adapters/registry/il-moh.adapter';
-import { MxSepRegistryAdapter } from './infrastructure/adapters/registry/mx-sep.adapter';
-// Document Verifiers (AI fallback for unsupported countries)
+// Document Verifiers (AI verification for unsupported countries)
 import { MockDocumentVerifier } from './infrastructure/adapters/document/mock-document.verifier';
 import { OpenAiDocumentVerifier } from './infrastructure/adapters/document/openai-document.verifier';
 // Controllers
 import { VerificationController } from './infrastructure/controllers/verification.controller';
 import { HealthController } from './infrastructure/controllers/health.controller';
 import { RootController } from './infrastructure/controllers/root.controller';
+import { BadgeController } from './infrastructure/controllers/badge.controller';
 // Persistence
 import { VerificationLogEntity } from './infrastructure/persistence/entities/verification-log.entity';
+import { CredentialBadgeEntity } from './infrastructure/persistence/entities/credential-badge.entity';
 import { TypeOrmVerificationRepository } from './infrastructure/persistence/repositories/typeorm-verification.repository';
 // Services
 import { MonitoringService } from './infrastructure/jobs/monitoring.service';
+import { SanctionsCheckService } from './infrastructure/services/sanctions-check.service';
+import { LeieService } from './infrastructure/services/leie.service';
+import { WebhookService } from './infrastructure/services/webhook.service';
+import { CredentialBadgeService } from './infrastructure/services/credential-badge.service';
+import { DeaVerificationService } from './infrastructure/services/dea-verification.service';
+import { InterstateCompactService } from './infrastructure/services/interstate-compact.service';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { TerminusModule } from '@nestjs/terminus';
+import { LicenseService } from './infrastructure/licensing/license.service';
 
 @Module({
   imports: [
@@ -56,28 +63,38 @@ import { TerminusModule } from '@nestjs/terminus';
         };
       },
     }),
-    TypeOrmModule.forFeature([VerificationLogEntity]),
+    TypeOrmModule.forFeature([VerificationLogEntity, CredentialBadgeEntity]),
     ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
     AuthModule,
     TerminusModule,
   ],
-  controllers: [VerificationController, HealthController, RootController],
+  controllers: [
+    VerificationController,
+    HealthController,
+    RootController,
+    BadgeController,
+  ],
   providers: [
     VerifyProviderUseCase,
-    // Live API Registry Adapters Only
-    UsNpiRegistryAdapter, // 🇺🇸 USA - NPI (NPPES) - Fully Public
-    FrAnsRegistryAdapter, // 🇫🇷 France - ANS (FHIR API)
-    AeDhaRegistryAdapter, // 🇦🇪 UAE - DHA (Dubai Pulse)
-    KeKmpdcRegistryAdapter, // 🇰🇪 Kenya - KMPDC (Intellex API)
-    NlBigRegistryAdapter, // 🇳🇱 Netherlands - BIG-register (SOAP)
-    IlMohRegistryAdapter, // 🇮🇱 Israel - MOH (CKAN)
-    MxSepRegistryAdapter, // 🇲🇽 Mexico - SEP (RapidAPI)
-    // Document Verifiers (AI handles unsupported countries)
+    // Official Government API Registry Adapters (5 countries)
+    UsNpiRegistryAdapter, // 🇺🇸 USA - NPI (CMS NPPES) - Free Public API
+    FrAnsRegistryAdapter, // 🇫🇷 France - ANS (FHIR API) - Free with registration
+    AeDhaRegistryAdapter, // 🇦🇪 UAE - DHA (Dubai Pulse) - Free Gov Portal
+    NlBigRegistryAdapter, // 🇳🇱 Netherlands - BIG-register (SOAP) - Free Gov API
+    IlMohRegistryAdapter, // 🇮🇱 Israel - MOH (CKAN) - Free Gov Portal
+    // Document Verifiers (AI handles unsupported countries - document required)
     MockDocumentVerifier,
     OpenAiDocumentVerifier,
     TypeOrmVerificationRepository,
     MonitoringService,
+    LeieService, // OIG LEIE database (CSV cache + indexing)
+    SanctionsCheckService, // Combined sanctions checking (OIG LEIE + GSA SAM)
+    WebhookService, // Webhook notifications for verification events
+    CredentialBadgeService, // Digital credential badges with QR codes
+    DeaVerificationService, // DEA registration number validation
+    InterstateCompactService, // IMLC/NLC state compact eligibility
+    LicenseService, // Enterprise License Management
     // Dependency Injection Bindings
     {
       provide: 'RegistryAdapters',
@@ -85,19 +102,15 @@ import { TerminusModule } from '@nestjs/terminus';
         us: UsNpiRegistryAdapter,
         fr: FrAnsRegistryAdapter,
         ae: AeDhaRegistryAdapter,
-        ke: KeKmpdcRegistryAdapter,
         nl: NlBigRegistryAdapter,
         il: IlMohRegistryAdapter,
-        mx: MxSepRegistryAdapter,
-      ) => [us, fr, ae, ke, nl, il, mx],
+      ) => [us, fr, ae, nl, il],
       inject: [
         UsNpiRegistryAdapter,
         FrAnsRegistryAdapter,
         AeDhaRegistryAdapter,
-        KeKmpdcRegistryAdapter,
         NlBigRegistryAdapter,
         IlMohRegistryAdapter,
-        MxSepRegistryAdapter,
       ],
     },
     {

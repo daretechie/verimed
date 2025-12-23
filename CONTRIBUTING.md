@@ -13,10 +13,10 @@ VeriMed uses the **Ports and Adapters** pattern. Each country adapter:
 
 Before adding a country, verify that:
 
-1. ✅ A **public API** exists (free or with registration)
+1. ✅ An **API or data source** exists (official government preferred)
 2. ✅ The API returns **license/registration status**
 3. ✅ The API accepts **license number** as input
-4. ✅ No **legal restrictions** on programmatic access
+4. ✅ No **legal restrictions** on programmatic access (no web scraping)
 
 ## Creating a New Adapter
 
@@ -85,34 +85,63 @@ YourCountryRegistryAdapter,
 
 ## AI Fallback
 
-For countries without registry APIs, VeriMed automatically uses AI document verification via the `DocumentVerifier`. This analyzes uploaded medical credentials.
+For countries without official APIs, VeriMed uses AI document verification. **Document upload is required** for unsupported countries.
+
+---
 
 ## Currently Supported Countries
 
-| Country | Registry | API Technology | Status |
-|---------|----------|----------------|--------|
-| 🇺🇸 **USA** | NPI (NPPES) | REST | ✅ Live |
-| 🇫🇷 **France** | RPPS (ANS) | FHIR | ✅ Live |
-| 🇦🇪 **UAE** | DHA (Dubai Pulse) | REST | ✅ Live |
-| 🇰🇪 **Kenya** | KMPDC (Intellex) | REST | ✅ Live |
-| 🇳🇱 **Netherlands** | BIG-register | SOAP | ✅ Live |
-| 🇮🇱 **Israel** | MOH | CKAN | ✅ Live |
-| 🇲🇽 **Mexico** | SEP (RapidAPI) | REST | ✅ Live |
+| Country | Registry | API Source | Type | Status |
+|---------|----------|------------|------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | CMS Federal Gov | Free | ✅ Live |
+| 🇫🇷 **France** | RPPS (ANS) | Agence du Numérique en Santé | Free | ✅ Live |
+| 🇦🇪 **UAE** | DHA | Dubai Pulse Gov Portal | Free | ✅ Live |
+| 🇳🇱 **Netherlands** | BIG-register | CIBG Gov Agency | Free | ✅ Live |
+| 🇮🇱 **Israel** | MOH | data.gov.il | Free | ✅ Live |
+
+---
+
+## Adding a New Country
+
+> [!IMPORTANT]
+> We welcome contributions for new countries! We prioritize:
+> 1. **Free, official government APIs** (best for open-source)
+> 2. **Paid official APIs** (if no free option exists)
+> 3. **Regulatory-compliant third-party services** (last resort)
+
+### Contribution Priority
+
+| Priority | Source Type | Requirements |
+|----------|-------------|--------------|
+| 🥇 **Highest** | Free official government API | Document the API source |
+| 🥈 **High** | Paid official government API | Document pricing, include env var for API key |
+| 🥉 **Acceptable** | Regulatory-compliant third-party | Must be from reputable provider, document compliance |
+| ❌ **Not Accepted** | Web scraping | Violates ToS, unreliable, legal risk |
+
+### Requirements for All Adapters
+
+1. **Official or reputable source** (government preferred)
+2. **No web scraping** (violates Terms of Service)
+3. **Include unit tests** with high coverage
+4. **Document the API** (pricing, registration, limitations)
+5. **Add environment variable** for API keys if paid
 
 ### Countries We'd Love to Add
 
-| Country | Potential Registry | Notes |
-|---------|-------------------|-------|
-| 🇬🇧 **UK** | GMC | Need a contributor |
-| 🇨🇦 **Canada** | CPSO/Provincial | Need a contributor |
-| 🇦🇺 **Australia** | AHPRA | Need a contributor |
-| 🇮🇳 **India** | NMC | Need a contributor |
-| 🇯🇵 **Japan** | JMA | Need a contributor |
-| 🇩🇪 **Germany** | BÄK | Need a contributor |
-| 🇿🇦 **South Africa** | HPCSA | Need a contributor |
-| 🇳🇬 **Nigeria** | MDCN | Need a contributor |
-| 🇧🇷 **Brazil** | CFM | Need a contributor |
+| Country | Registry | Notes | Type |
+|---------|----------|-------|------|
+| 🇦🇺 **Australia** | AHPRA | Commercial API available | Paid |
+| 🇬🇧 **UK** | GMC | Paid API (£5,000+/year) | Paid |
+| 🇯🇵 **Japan** | JMA | Need contributor to research | Unknown |
+| 🇩🇪 **Germany** | BÄK | No public API found | N/A |
+| 🇧🇷 **Brazil** | CFM | Paid web service (R$772/year) | Paid |
+| 🇨🇦 **Canada** | CPSO | Province-level APIs | Mixed |
+| 🇮🇳 **India** | NMC | Surepass available | Paid |
+| 🇸🇦 **Saudi Arabia** | SCFHS | No official API | N/A |
+| 🇿🇦 **South Africa** | HPCSA | Need contributor to research | Unknown |
+| 🇳🇬 **Nigeria** | MDCN | Need contributor to research | Unknown |
 
+---
 
 ## Testing Requirements
 
@@ -121,6 +150,34 @@ When adding a new adapter, please include:
 1. **Unit tests** in `src/infrastructure/adapters/registry/{cc}-{registry}.adapter.spec.ts`
 2. **E2E test case** for the new country in `test/verification.e2e-spec.ts`
 3. **Documentation** updates to this file and `README.md`
+
+> 🎯 **Coverage Target: 100%** - All new code must have complete test coverage.
+
+---
+
+## Implemented Features ✅
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| **Batch Verification** | ✅ Done | POST /verify/batch (up to 50 providers) |
+| **OIG LEIE Sanctions** | ✅ Done | CSV cache with monthly refresh |
+| **GSA SAM Sanctions** | ✅ Done | Live API integration |
+| **Webhook Notifications** | ✅ Done | 5 event types with HMAC signing |
+| **120-Day Verification Windows** | ✅ Done | Auto-alerts and re-verification |
+| **Continuous Monitoring** | ✅ Done | Daily/weekly scheduled jobs |
+
+## Planned Features
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **Credential Wallet** | Digital badges with QR verification | 🚧 Planned |
+| **Interstate Compact Support** | IMLC/NLC recognition | 🚧 Planned |
+| **NPDB Integration** | National Practitioner Data Bank | 🚧 Planned |
+| **DEA Verification** | Drug Enforcement Administration | 🚧 Planned |
+| **ABMS Board Verification** | Specialty certifications | 🚧 Planned |
+| **Mobile SDK** | iOS/Android verification | 🚧 Planned |
+
+---
 
 ## Questions?
 

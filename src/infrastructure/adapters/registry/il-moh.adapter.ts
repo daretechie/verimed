@@ -16,7 +16,8 @@ import {
  * LIVE API INTEGRATION
  * Source: Israel Government Data Portal (data.gov.il)
  * API: CKAN API
- * Resource ID: f7ed18ec-55f0-4fe4-9372-520e03e5c704 (Physicians Database)
+ * Resource ID: 9c64c522-bbc2-48fe-96fb-3b2a8626f59e (Physicians Licenses Database)
+ * Dataset: https://data.gov.il/dataset/ministry-health/database-of-doctors-licenses-moh
  * Documentation: https://data.gov.il/dataset/physicians-database
  */
 @Injectable()
@@ -24,7 +25,8 @@ export class IlMohRegistryAdapter implements IRegistryAdapter {
   private readonly logger = new Logger(IlMohRegistryAdapter.name);
   private readonly API_ENDPOINT =
     'https://data.gov.il/api/3/action/datastore_search';
-  private readonly RESOURCE_ID = 'f7ed18ec-55f0-4fe4-9372-520e03e5c704';
+  // Verified resource ID (as of December 2025)
+  private readonly RESOURCE_ID = '9c64c522-bbc2-48fe-96fb-3b2a8626f59e';
 
   supports(countryCode: string): boolean {
     return countryCode === 'IL';

@@ -8,10 +8,10 @@ export class ReviewVerificationDto {
     example: VerificationStatus.VERIFIED,
   })
   @IsEnum(VerificationStatus)
-  status: VerificationStatus; // Should be VERIFIED or REJECTED
+  status!: VerificationStatus; // Should be VERIFIED or REJECTED
 
   @ApiProperty({ example: 'Documents verified manually via phone call' })
   @IsString()
   @IsNotEmpty()
-  reason: string;
+  reason!: string;
 }
