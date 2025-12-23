@@ -48,9 +48,9 @@ export class VerificationLogEntity {
   /**
    * Verification expiration date (120 days from verification)
    * NCQA 2025 requires re-verification after this window
-   * Note: Using 'datetime' for SQLite compatibility, TypeORM handles this for PostgreSQL
+   * Note: Using 'date' type which is cross-database compatible (SQLite + PostgreSQL)
    */
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'date', nullable: true })
   @Index()
   expiresAt!: Date | null;
 
