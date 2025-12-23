@@ -24,7 +24,7 @@ Healthcare fraud costs **$68 billion annually**. In 2025, the DOJ charged 193 de
 - Enterprise solutions cost $25K-$50K+/year
 - Manual credentialing takes **months** per provider
 
-**VeriMed is an open-source API that standardizes medical provider verification across **5+ Official Government APIs** (Points of Truth). It replaces inconsistent web scraping with direct, primary-source government integrations.when registries aren't available.
+**VeriMed is an open-source API that standardizes medical provider verification across **5+ Official Government APIs** (Points of Truth). It replaces inconsistent web scraping with direct, primary-source government integrations.
 
 > 💡 **Want to help expand global coverage?** Contributors with knowledge of their country's medical registry can help add new adapters! See our [Contribution Guide](CONTRIBUTING.md).
 
