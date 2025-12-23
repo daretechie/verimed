@@ -128,5 +128,6 @@ import { LicenseService } from './infrastructure/licensing/license.service';
     },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
+  exports: [VerifyProviderUseCase],
 })
 export class AppModule {}
