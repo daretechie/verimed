@@ -128,7 +128,7 @@ Response Requirements (JSON only):
         VerificationStatus.MANUAL_REVIEW,
         VerificationMethod.AI_DOCUMENT,
         new Date(),
-        { error: error.message },
+        { error: error instanceof Error ? error.message : String(error) },
         0.0,
       );
     }

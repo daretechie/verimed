@@ -11,10 +11,12 @@ import {
   Put,
   UseGuards,
   BadRequestException,
+  Logger,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import * as FileType from 'file-type';
+import { randomUUID } from 'crypto';
 import {
   ApiTags,
   ApiOperation,
@@ -26,10 +28,16 @@ import {
 } from '@nestjs/swagger';
 import { VerifyProviderUseCase } from '../../application/use-cases/verify-provider.use-case';
 import { CreateVerificationDto } from '../../application/dtos/create-verification.dto';
+import {
+  BatchVerificationDto,
+  BatchVerificationResult,
+} from '../../application/dtos/batch-verification.dto';
 import { VerificationRequest } from '../../domain/entities/verification-request.entity';
 import type { IVerificationRepository } from '../../domain/ports/verification-repository.port';
 import { ReviewVerificationDto } from '../../application/dtos/review-verification.dto';
 import { ApiKeyGuard } from '../guards/api-key.guard';
+import { EnterpriseGuard } from '../guards/enterprise.guard';
+import { WebhookService } from '../services/webhook.service';
 
 @ApiTags('Verification')
 @ApiSecurity('api-key')
@@ -37,10 +45,13 @@ import { ApiKeyGuard } from '../guards/api-key.guard';
 @ApiResponse({ status: 429, description: 'Too many requests' })
 @Controller('verify')
 export class VerificationController {
+  private readonly logger = new Logger(VerificationController.name);
+
   constructor(
     private readonly verifyProviderUseCase: VerifyProviderUseCase,
     @Inject('VerificationRepository')
     private readonly repository: IVerificationRepository,
+    private readonly webhookService: WebhookService,
   ) {}
 
   @Post()
@@ -146,7 +157,98 @@ export class VerificationController {
     );
 
     // Execute the logic
-    return this.verifyProviderUseCase.execute(request);
+    const result = await this.verifyProviderUseCase.execute(request);
+
+    // Send webhook notification
+    await this.webhookService.notifyVerificationCompleted(
+      result.transactionId || '',
+      dto.providerId,
+      result.status,
+      { method: result.method, confidenceScore: result.confidenceScore },
+    );
+
+    return result;
+  }
+
+  @Post('batch')
+  @UseGuards(EnterpriseGuard)
+  @ApiOperation({
+    summary: 'Submit multiple providers for batch verification',
+    description: 'Requires Enterprise License',
+  })
+  @ApiResponse({ status: 201, description: 'Batch verification processed.' })
+  @ApiResponse({ status: 403, description: 'Requires Enterprise License.' })
+  @ApiBody({ type: BatchVerificationDto })
+  async verifyBatch(
+    @Body() dto: BatchVerificationDto,
+  ): Promise<BatchVerificationResult> {
+    const batchId = randomUUID();
+    const startedAt = new Date();
+    const results: BatchVerificationResult['results'] = [];
+
+    this.logger.log(
+      `[Batch] Starting batch ${batchId} with ${dto.providers.length} providers`,
+    );
+
+    for (const provider of dto.providers) {
+      try {
+        const request = new VerificationRequest(
+          provider.providerId,
+          provider.countryCode,
+          {
+            firstName: provider.firstName,
+            lastName: provider.lastName,
+            licenseNumber: provider.licenseNumber,
+            dateOfBirth: provider.dateOfBirth
+              ? new Date(provider.dateOfBirth)
+              : undefined,
+          },
+          [], // No file uploads in batch mode
+        );
+
+        const result = await this.verifyProviderUseCase.execute(request);
+
+        results.push({
+          providerId: provider.providerId,
+          transactionId: result.transactionId || '',
+          status: result.status,
+        });
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        results.push({
+          providerId: provider.providerId,
+          transactionId: '',
+          status: 'ERROR',
+          error: errorMessage,
+        });
+      }
+    }
+
+    const batchResult: BatchVerificationResult = {
+      batchId,
+      total: dto.providers.length,
+      processed: results.length,
+      results,
+      startedAt,
+      completedAt: new Date(),
+    };
+
+    // Send webhook notification
+    const successful = results.filter((r) => r.status !== 'ERROR').length;
+    const failed = results.filter((r) => r.status === 'ERROR').length;
+    await this.webhookService.notifyBatchCompleted(
+      batchId,
+      dto.providers.length,
+      successful,
+      failed,
+    );
+
+    this.logger.log(
+      `[Batch] Completed ${batchId}: ${successful} successful, ${failed} failed`,
+    );
+
+    return batchResult;
   }
 
   @Get(':id')

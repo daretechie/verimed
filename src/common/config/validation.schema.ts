@@ -8,7 +8,8 @@ export const validationSchema = Joi.object({
   API_KEY: Joi.string().required().description('Global API Key for VeriMed'),
   DATABASE_URL: Joi.string().optional(),
   AI_API_KEY: Joi.string().optional(),
-  JWT_SECRET: Joi.string().required().default('verimed-jwt-secure-secret-2025'),
+  JWT_SECRET: Joi.string().required(),
   ADMIN_USER: Joi.string().default('admin'),
-  ADMIN_PASS: Joi.string().required().default('verimed-admin-change-me'),
+  ADMIN_PASS: Joi.string().required(),
+  LICENSE_KEY: Joi.string().optional(),
 });

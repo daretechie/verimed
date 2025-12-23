@@ -12,24 +12,50 @@ VeriMed is a professional-grade, hybrid verification platform designed to valida
 
 Check out our [Architecture Decision Records (ADR)](docs/adr) to understand the design choices behind VeriMed.
 
+---
 
+## 🚨 The Problem
+
+Healthcare fraud costs **$68 billion annually**. In 2025, the DOJ charged 193 defendants in telemedicine fraud totaling $1.17 billion. Yet there's no unified, affordable way to verify if a "doctor" is actually licensed.
+
+**Current reality:**
+- 50+ different U.S. state licensing requirements
+- Every country has different APIs (REST, SOAP, FHIR, CKAN)
+- Enterprise solutions cost $25K-$50K+/year
+- Manual credentialing takes **months** per provider
+
+**VeriMed is an open-source API that standardizes medical provider verification across **5+ Official Government APIs** (Points of Truth). It replaces inconsistent web scraping with direct, primary-source government integrations.when registries aren't available.
+
+> 💡 **Want to help expand global coverage?** Contributors with knowledge of their country's medical registry can help add new adapters! See our [Contribution Guide](CONTRIBUTING.md).
+
+---
 
 ## 🌍 Global Coverage
 
-VeriMed now integrates with **7 national medical registries** across 4 continents:
+VeriMed integrates with **5 official government medical registries** via free public APIs:
 
-| Country | Registry | API Technology | Key Access |
-|---------|----------|----------------|------------|
-| 🇺🇸 **USA** | NPI (NPPES) | REST | Public |
-| 🇫🇷 **France** | RPPS (ANS) | FHIR | Public |
-| 🇦🇪 **UAE** | DHA (Dubai Pulse) | REST | Public |
-| 🇰🇪 **Kenya** | KMPDC | REST | `KE_INTELLEX_API_KEY` |
-| 🇳🇱 **Netherlands** | BIG-register | **SOAP** | Public |
-| 🇮🇱 **Israel** | MOH | **CKAN** | Public |
-| 🇲🇽 **Mexico** | SEP | REST | `MX_RAPIDAPI_KEY` |
+| Country | Registry | API Technology | Source |
+|---------|----------|----------------|--------|
+| 🇺🇸 **USA** | NPI (NPPES) | REST | CMS Federal Gov |
+| 🇫🇷 **France** | RPPS (ANS) | FHIR v2 | Agence du Numérique en Santé |
+| 🇦🇪 **UAE** | DHA | REST | Dubai Pulse Gov Portal |
+| 🇳🇱 **Netherlands** | BIG-register | SOAP | CIBG Gov Agency |
+| 🇮🇱 **Israel** | MOH | CKAN | data.gov.il |
 
-> [!TIP]
-> **Faster High-Security Verification**: For countries without a live API registry, uploading **both** a Medical License and a National ID/Passport will result in significantly faster automated verification and higher confidence scores.
+### 🤖 AI Document Verification (All Other Countries)
+
+For countries **without official free APIs**, VeriMed uses AI-powered document verification:
+
+| Feature | Description |
+|---------|-------------|
+| **Document Required** | Medical license/certificate upload is mandatory |
+| **AI Analysis** | OpenAI Vision extracts and validates credentials |
+| **Confidence Scoring** | 0-100% confidence based on document quality |
+| **Audit Trail** | All uploads logged for compliance |
+| **BYOK Architecture** | **Bring Your Own Key**: You strictly control your own OpenAI API keys. Data never leaves your control. |
+
+> [!IMPORTANT]
+> For unsupported countries, uploading a valid **Medical License** document is **required**. Adding a **National ID/Passport** increases confidence scores.
 
 ---
 
@@ -37,6 +63,43 @@ VeriMed now integrates with **7 national medical registries** across 4 continent
 
 VeriMed is designed for both rapid exploration by developers and robust deployment by DevOps engineers.
 
+## 🚀 Quick Start
+
+### Quick Start (Source)
+Since VeriMed is currently in active development, valid extraction from source is the recommended method.
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/daretechie/verimed.git
+    cd verimed
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Generate Secrets**
+    ```bash
+    npm run generate-secrets
+    ```
+
+4.  **Start the Server**
+    ```bash
+    npm run start:dev
+    ```
+
+## 💎 Enterprise Edition
+Need **SSO (Okta/Azure)**, **Batch Verification**, or **Audit Logs**?
+Upgrade to VeriMed Enterprise to unlock these features effectively.
+
+- [x] **Single Sign-On (SAML 2.0)**
+- [x] **Batch Processing APIs**
+- [x] **Dedicated Support**
+
+[**Contact Sales for a License Key**](mailto:sales@verimed.com) or [**Read the Docs**](docs/ENTERPRISE.md).
+
+## 🔒 Configuration
 ### 1. The Developer Path (KISS)
 Designed for local development and rapid testing.
 - **Database:** Auto-configured SQLite (`verimed.sqlite`).
@@ -45,6 +108,7 @@ Designed for local development and rapid testing.
   ```bash
   npm install
   cp .env.example .env
+  npm run generate-secrets  # <--- CRITICAL: Generates secure keys for .env
   npm run start:dev
   ```
 
@@ -64,6 +128,46 @@ Designed for high-scale, secure deployment.
 
 ### Fuzzy Identity Validation
 The engine uses **Fuse.js** logic to compare user-provided names with official registry data, allowing for variations (e.g., "Greg" vs "Gregory") while maintaining security.
+
+### Batch Verification
+Verify up to **50 providers** in a single API call:
+```bash
+curl -X POST http://localhost:3000/verify/batch \
+  -H "x-api-key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"providers": [{"providerId": "001", "countryCode": "US", ...}, ...]}'
+```
+
+### Webhook Notifications
+Receive real-time notifications for verification events:
+- `verification.completed` - When verification finishes
+- `verification.expiring_soon` - 14 days before expiration
+- `verification.expired` - When 120-day window passes
+- `batch.completed` - When batch processing finishes
+- `sanctions.match` - When provider is on exclusion list
+
+### Credential Badges with QR Codes
+Generate portable, verifiable credentials for providers:
+- **QR Code Generation** - Instant mobile verification
+- **Short Codes** - 8-character codes for easy sharing (e.g., `ABCD1234`)
+- **Public Verification** - No API key needed for badge verification
+
+### DEA Verification (US)
+Validates DEA registration numbers for controlled substance prescribers:
+- **Checksum Validation** - Official DEA algorithm
+- **Registrant Type Detection** - 16 provider types
+- **Last Name Matching** - Additional fraud prevention
+
+### Interstate Compact Support
+Track multi-state licensure eligibility:
+- **IMLC** - 45 member states (physicians)
+- **NLC** - 42 member states (nurses)
+- Cross-state license sharing validation
+
+### Sanctions Checking
+Federal exclusion list verification for US providers:
+- **OIG LEIE** - Medicare/Medicaid exclusions (monthly CSV cache)
+- **GSA SAM** - Federal debarment list (live API)
 
 ### Deep Health Checks
 Equipped with `@nestjs/terminus` to provide real-time status of upstream dependencies and database connectivity.
@@ -138,6 +242,19 @@ curl -X PUT http://localhost:3000/verify/{transactionId}/review \
 ### Health Check
 ```bash
 curl http://localhost:3000/health
+```
+
+### Create Credential Badge
+```bash
+curl -X POST http://localhost:3000/badge \
+  -H "x-api-key: <YOUR_API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"verificationId": "<TX_ID>", "providerName": "Dr. John Smith"}'
+```
+
+### Verify Badge (Public - No Auth)
+```bash
+curl http://localhost:3000/badge/verify/ABCD1234
 ```
 
 > [!TIP]

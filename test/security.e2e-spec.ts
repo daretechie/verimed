@@ -28,7 +28,7 @@ describe('Security QA (E2E)', () => {
     app.use(compression());
 
     await app.init();
-  });
+  }, 30000); // 30s timeout for database connection
 
   afterAll(async () => {
     if (app) {
