@@ -18,7 +18,7 @@ X-API-Key: your-api-key-here
 
 ```bash
 curl -X POST http://localhost:3000/verify \
-  -H "X-API-Key: YOUR_API_KEY" \
+  -H "X-API-Key: <YOUR_API_KEY_HERE>" \
   -H "Content-Type: application/json" \
   -d '{
     "providerId": "provider-001",
@@ -91,7 +91,7 @@ For unsupported countries, upload a medical license document:
 
 ```bash
 curl -X POST http://localhost:3000/verify \
-  -H "X-API-Key: YOUR_API_KEY" \
+  -H "X-API-Key: <YOUR_API_KEY_HERE>" \
   -F "providerId=provider-002" \
   -F "countryCode=DE" \
   -F "firstName=Hans" \
@@ -107,7 +107,7 @@ Verify up to **50 providers** in one request:
 
 ```bash
 curl -X POST http://localhost:3000/verify/batch \
-  -H "X-API-Key: YOUR_API_KEY" \
+  -H "X-API-Key: <YOUR_API_KEY_HERE>" \
   -H "Content-Type: application/json" \
   -d '{
     "providers": [
@@ -125,7 +125,7 @@ curl -X POST http://localhost:3000/verify/batch \
 
 ```bash
 curl -X POST http://localhost:3000/badge \
-  -H "X-API-Key: YOUR_API_KEY" \
+  -H "X-API-Key: <YOUR_API_KEY_HERE>" \
   -H "Content-Type: application/json" \
   -d '{"verificationId": "tx-abc123", "providerName": "Dr. John Smith"}'
 ```
