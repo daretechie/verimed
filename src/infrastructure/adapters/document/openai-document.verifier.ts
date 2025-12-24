@@ -62,7 +62,7 @@ export class OpenAiDocumentVerifier implements IDocumentVerifier {
 
 STRICT AUTHENTICITY CRITERIA:
 1. VISUAL FIDELITY: Check for official seals, holograms, and standardized layouts for ${request.countryCode}. If the document looks like a generic template or has "too perfect" digital text alignment, flag as MANUAL_REVIEW or REJECTED.
-2. DATA CONSISTENCY: Compare name and license number to user input: ${JSON.stringify(request.attributes)}.
+2. DATA CONSISTENCY: Compare name and license number to user input.
 3. CROSS-VERIFICATION: If an Identity Document (ID) is provided, verify that the Name, DOB, and Photo (if possible) are consistent between the Medical License and the ID. 
 4. TAMPER DETECTION: Look for signs of "digital cut-and-paste", mismatched fonts, or blurry metadata around sensitive text.
 
@@ -72,7 +72,11 @@ Response Requirements (JSON only):
   "confidence": number (0.0 to 1.0),
   "reason": "Detailed explanation of visual findings and data match",
   "data_extracted": { "name": string, "license_number": string, "has_id_match": boolean }
-}`,
+}
+
+### USER ATTRIBUTES TO VERIFY:
+${JSON.stringify(request.attributes).replace(/[^a-zA-Z0-9":,.\- ]/g, '')}
+### END OF ATTRIBUTES`,
         },
         {
           role: 'user',

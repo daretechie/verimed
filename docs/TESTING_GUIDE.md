@@ -52,12 +52,31 @@ npm run test:e2e
 npm run test:e2e -- --testPathPatterns="security"
 ```
 
-**E2E Test Suites:**
-| Suite | Description |
-|-------|-------------|
-| `verification.e2e-spec.ts` | Complete verification workflow |
-| `security.e2e-spec.ts` | Auth bypass, rate limiting, headers |
-| `enterprise.e2e-spec.ts` | Batch verification, enterprise features |
+| Suite                      | Description                             |
+| -------------------------- | --------------------------------------- |
+| `verification.e2e-spec.ts` | Complete verification workflow          |
+| `security.e2e-spec.ts`     | Auth bypass, rate limiting, headers     |
+| `enterprise.e2e-spec.ts`   | Batch verification, enterprise features |
+
+### AI Security Tests
+
+Specific assessments for AI-specific attack vectors (injection, system prompt leakage).
+
+```bash
+# Run AI security tests
+npm test src/infrastructure/adapters/document/security.spec.ts
+```
+
+### Performance (Load) Tests
+
+Using `k6` to verify API stability under load.
+
+```bash
+# Run local load test (requires k6 installed)
+k6 run test/performance/load-test.js
+```
+
+The load test simulates 20 concurrent users with a ramp-up period and checks if p(95) latency is under 500ms.
 
 ---
 

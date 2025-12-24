@@ -64,6 +64,8 @@ describe('OpenAiDocumentVerifier', () => {
 
     const request: any = {
       providerId: '123',
+      countryCode: 'US',
+      attributes: { firstName: 'John', lastName: 'Doe' },
       documents: [{ buffer: Buffer.from('fake'), mimetype: 'image/png' }],
     };
 

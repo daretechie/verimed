@@ -86,10 +86,17 @@ export class VerificationController {
     },
   })
   @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'documents', maxCount: 5 },
-      { name: 'idDocument', maxCount: 1 },
-    ]),
+    FileFieldsInterceptor(
+      [
+        { name: 'documents', maxCount: 5 },
+        { name: 'idDocument', maxCount: 1 },
+      ],
+      {
+        limits: {
+          fileSize: 10 * 1024 * 1024, // 10MB limit
+        },
+      },
+    ),
   )
   async verify(
     @Body() dto: CreateVerificationDto,

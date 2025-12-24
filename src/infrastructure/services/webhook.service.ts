@@ -187,8 +187,11 @@ export class WebhookService {
    * Generate HMAC signature for webhook payload
    */
   private generateSignature(payload: string): string {
+    if (!this.webhookSecret) {
+      throw new Error('WEBHOOK_SECRET is not configured');
+    }
     return crypto
-      .createHmac('sha256', this.webhookSecret || 'secret')
+      .createHmac('sha256', this.webhookSecret)
       .update(payload)
       .digest('hex');
   }
