@@ -6,6 +6,11 @@ import { CredentialBadgeService } from './credential-badge.service';
 import { CredentialBadgeEntity } from '../persistence/entities/credential-badge.entity';
 import { VerificationLogEntity } from '../persistence/entities/verification-log.entity';
 
+// Mock QRCode module to prevent slow QR code generation during tests
+jest.mock('qrcode', () => ({
+  toDataURL: jest.fn().mockResolvedValue('data:image/png;base64,mockQRCode'),
+}));
+
 describe('CredentialBadgeService', () => {
   let service: CredentialBadgeService;
 

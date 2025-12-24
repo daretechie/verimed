@@ -20,6 +20,7 @@ import { VerificationController } from './infrastructure/controllers/verificatio
 import { HealthController } from './infrastructure/controllers/health.controller';
 import { RootController } from './infrastructure/controllers/root.controller';
 import { BadgeController } from './infrastructure/controllers/badge.controller';
+import { UsComplianceController } from './infrastructure/controllers/us-compliance.controller';
 // Persistence
 import { VerificationLogEntity } from './infrastructure/persistence/entities/verification-log.entity';
 import { CredentialBadgeEntity } from './infrastructure/persistence/entities/credential-badge.entity';
@@ -74,6 +75,7 @@ import { LicenseService } from './infrastructure/licensing/license.service';
     HealthController,
     RootController,
     BadgeController,
+    UsComplianceController,
   ],
   providers: [
     VerifyProviderUseCase,
