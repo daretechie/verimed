@@ -18,6 +18,17 @@ describe('AuthService', () => {
     }),
   };
 
+  const mockCryptoService = {
+    hash: jest.fn().mockResolvedValue('hashed_password'),
+    compare: jest.fn().mockImplementation((plain, hash) => {
+      // Simple mock logic: checks if plain ends with "123" assuming success,
+      // or we can use bcrypt.compareSync to stay true to original mock data logic,
+      // but mocks should generally be simple.
+      // Let's use real bcrypt.compareSync for the test utility since we initialized with it
+      return bcrypt.compareSync(plain, hash);
+    }),
+  };
+
   beforeEach(async () => {
     mockJwtService = {
       sign: jest.fn().mockReturnValue('mock-jwt-token'),
@@ -33,6 +44,10 @@ describe('AuthService', () => {
         {
           provide: ConfigService,
           useValue: mockConfigService,
+        },
+        {
+          provide: 'CryptoService',
+          useValue: mockCryptoService,
         },
       ],
     }).compile();

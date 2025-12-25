@@ -4,63 +4,141 @@ metadata:
   name: verimed-api
   labels:
     app: verimed
+    component: api
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: verimed
+      component: api
   template:
     metadata:
       labels:
         app: verimed
+        component: api
     spec:
       containers:
-      - name: api
-        image: verimed-api:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: verimed-secrets
-              key: api-key
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: verimed-secrets
-              key: db-url
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 15
-          periodSeconds: 10
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-          requests:
-            cpu: "250m"
-            memory: "256Mi"
+        - name: verimed-api
+          image: verimed/api:latest
+          ports:
+            - containerPort: 3000
+              name: http
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: verimed-secrets
+                  key: database-url
+            - name: AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: verimed-secrets
+                  key: openai-api-key
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: verimed-secrets
+                  key: jwt-secret
+            - name: AI_KILL_SWITCH
+              value: "false"
+            - name: AI_DAILY_BUDGET
+              value: "10.00"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector:4318/v1/traces"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: verimed-service
+  name: verimed-api
+  labels:
+    app: verimed
+    component: api
 spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
   selector:
     app: verimed
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
-  type: LoadBalancer
+    component: api
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: verimed-api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: verimed-api
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: verimed-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rate-limit: "10"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  tls:
+    - hosts:
+        - api.verimed.app
+      secretName: verimed-tls
+  rules:
+    - host: api.verimed.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: verimed-api
+                port:
+                  number: 80

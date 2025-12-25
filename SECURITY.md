@@ -40,3 +40,11 @@ Monitor the [advisories](https://github.com/verimed/api/security/advisories) and
 ```bash
 npm update
 ```
+
+## 6. AI Security & Governance
+VeriMed implements multiple layers of protection for AI-driven verifications:
+
+- **AI Safety Guard**: Inspects all user attributes for potential prompt injection patterns and unauthorized control characters.
+- **Structured Outputs**: Uses strict JSON schemas (OpenAI Structured Outputs) to ensure AI responses are deterministic and safe to parse.
+- **Usage Monitoring**: All AI operations log token counts and model information to track costs and identify anomalies.
+- **Human-in-the-loop**: All AI-based verifications default to `MANUAL_REVIEW` if confidence scores fall below the specified threshold.

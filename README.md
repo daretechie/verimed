@@ -29,7 +29,7 @@ Healthcare fraud costs **$68 billion annually**. In 2025, the DOJ charged 193 de
 - Enterprise solutions cost $25K-$50K+/year
 - Manual credentialing takes **months** per provider
 
-**VeriMed is an open-source API that standardizes medical provider verification across **5+ Official Government APIs\*\* (Points of Truth). It replaces inconsistent web scraping with direct, primary-source government integrations.
+**VeriMed is an open-source API that standardizes medical provider verification across **11 Official Government Registries** (Points of Truth). It replaces inconsistent web scraping with direct, primary-source government integrations.
 
 > 💡 **Want to help expand global coverage?** Contributors with knowledge of their country's medical registry can help add new adapters! See our [Contribution Guide](CONTRIBUTING.md).
 
@@ -37,8 +37,9 @@ Healthcare fraud costs **$68 billion annually**. In 2025, the DOJ charged 193 de
 
 ## 🌍 Global Coverage
 
-VeriMed integrates with **5 official government medical registries** via free public APIs:
+VeriMed integrates with **11 official government medical registries**:
 
+### Full API Integration
 | Country            | Registry     | API Technology | Source                       |
 | ------------------ | ------------ | -------------- | ---------------------------- |
 | 🇺🇸 **USA**         | NPI (NPPES)  | REST           | CMS Federal Gov              |
@@ -47,6 +48,15 @@ VeriMed integrates with **5 official government medical registries** via free pu
 | 🇳🇱 **Netherlands** | BIG-register | SOAP           | CIBG Gov Agency              |
 | 🇮🇱 **Israel**      | MOH          | CKAN           | data.gov.il                  |
 
+### Manual Review Integration
+| Country            | Registry     | License Format | Status                       |
+| ------------------ | ------------ | -------------- | ---------------------------- |
+| 🇬🇧 **UK**          | GMC          | 7 digits       | Online Register Search       |
+| 🇨🇦 **Canada**      | Provincial   | Province-specific | CPSO, CPSBC, CPSA, CMQ    |
+| 🇦🇺 **Australia**   | AHPRA        | MED0001234567  | PIE API (Contract Required)  |
+| 🇩🇪 **Germany**     | BÄK          | Arztnummer     | 17 State Chambers            |
+| 🇿🇦 **South Africa**| HPCSA        | MP/MPS+digits  | iRegister Portal             |
+| 🇧🇷 **Brazil**      | CFM          | CRM-XX/NUMBER  | 27 Regional Councils         |
 ### 🤖 AI Document Verification (All Other Countries)
 
 For countries **without official free APIs**, VeriMed uses AI-powered document verification:

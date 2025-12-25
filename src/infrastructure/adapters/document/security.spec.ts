@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { OpenAiDocumentVerifier } from './openai-document.verifier';
 import { VerificationRequest } from '../../../domain/entities/verification-request.entity';
+import { AIMonitoringService } from '../../services/ai-monitoring.service';
+import { AICacheService } from '../../services/ai-cache.service';
 
 describe('Security Assessment: AI Prompt Injection', () => {
   let verifier: OpenAiDocumentVerifier;
@@ -19,6 +21,20 @@ describe('Security Assessment: AI Prompt Injection', () => {
               if (key === 'AI_API_KEY') return 'mock-key';
               return null;
             }),
+          },
+        },
+        {
+          provide: AIMonitoringService,
+          useValue: {
+            logUsage: jest.fn(),
+          },
+        },
+        {
+          provide: AICacheService,
+          useValue: {
+            generateHash: jest.fn().mockReturnValue('mock-hash'),
+            get: jest.fn().mockResolvedValue(null),
+            set: jest.fn().mockResolvedValue(undefined),
           },
         },
       ],
@@ -74,9 +90,13 @@ describe('Security Assessment: AI Prompt Injection', () => {
 
     // Verify what was sent to OpenAI
     const sentMessages = mockCreate.mock.calls[0][0].messages;
-    const systemPrompt = sentMessages[0].content;
+    const userRoleMessage = sentMessages[1];
+    const userContent = userRoleMessage.content;
+    const textPart = userContent.find((p: any) => p.type === 'text');
 
-    // Check if the malicious string is present in the prompt
-    expect(systemPrompt).toContain('ignore all previous instructions');
+    // Check if the malicious string is present in the user prompt
+    // This confirms data is being passed, but since we use Structured Outputs and system separation,
+    // the injection risk is mitigated. The test here just confirms inputs are flowing.
+    expect(textPart.text).toContain('ignore all previous instructions');
   });
 });

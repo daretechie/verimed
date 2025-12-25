@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import { VerifyProviderUseCase } from './verify-provider.use-case';
 import { IRegistryAdapter } from '../../domain/ports/registry-adapter.port';
 import { IDocumentVerifier } from '../../domain/ports/document-verifier.port';
@@ -39,6 +40,15 @@ describe('VerifyProviderUseCase', () => {
         { provide: 'RegistryAdapters', useValue: [registryAdapter] },
         { provide: 'DocumentVerifier', useValue: documentVerifier },
         { provide: 'VerificationRepository', useValue: repository },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key) => {
+              if (key === 'AI_CONFIDENCE_THRESHOLD') return 0.85;
+              return null;
+            }),
+          },
+        },
       ],
     }).compile();
 
@@ -170,6 +180,38 @@ describe('VerifyProviderUseCase', () => {
 
     expect(result.status).toBe(VerificationStatus.PENDING);
     expect(result.method).toBe(VerificationMethod.AI_DOCUMENT);
+  });
+
+  it('should force MANUAL_REVIEW if AI confidence is below threshold', async () => {
+    registryAdapter.supports.mockReturnValue(false); // Force AI path
+    const request = new VerificationRequest(
+      'prov-001',
+      'ZZ',
+      {
+        firstName: 'John',
+        lastName: 'Doe',
+        licenseNumber: '123',
+      },
+      [{ buffer: Buffer.from('doc'), mimetype: 'image/jpeg' }],
+    );
+
+    documentVerifier.verifyDocuments.mockResolvedValue(
+      new VerificationResult(
+        VerificationStatus.VERIFIED,
+        VerificationMethod.AI_DOCUMENT,
+        new Date(),
+        { aiReason: 'Looks okay but not sure' },
+        0.7, // Below 0.85 threshold
+      ),
+    );
+
+    const result = await useCase.execute(request);
+
+    expect(result.status).toBe(VerificationStatus.MANUAL_REVIEW);
+    expect(result.metadata.lowConfidence).toBe(true);
+    expect(result.metadata.originalStatus).toBe(
+      VerificationStatus.MANUAL_REVIEW,
+    );
   });
 
   it('should use doc result if registry is pending', async () => {

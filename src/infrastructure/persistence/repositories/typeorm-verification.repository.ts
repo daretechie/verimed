@@ -121,14 +121,18 @@ export class TypeOrmVerificationRepository implements IVerificationRepository {
 
   /**
    * Find all expired verifications (past 120-day window)
+   * @param limit - Max number of records to return (default: 100)
    */
-  async findExpiredVerifications(): Promise<VerificationLogEntity[]> {
+  async findExpiredVerifications(
+    limit: number = 100,
+  ): Promise<VerificationLogEntity[]> {
     return this.repo.find({
       where: {
         status: VerificationStatus.VERIFIED,
         expiresAt: LessThan(new Date()),
       },
       order: { expiresAt: 'ASC' },
+      take: limit,
     });
   }
 

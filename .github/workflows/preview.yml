@@ -1,0 +1,81 @@
+name: PR Preview Environment
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    name: Deploy Preview Environment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          AI_API_KEY: mock
+
+      - name: Build Docker Image
+        run: |
+          docker build -t verimed-preview:pr-${{ github.event.pull_request.number }} .
+
+      - name: Start Preview Container
+        run: |
+          docker run -d \
+            --name verimed-preview-${{ github.event.pull_request.number }} \
+            -p 3000:3000 \
+            -e NODE_ENV=preview \
+            -e DATABASE_URL='' \
+            -e AI_API_KEY=mock \
+            -e AI_KILL_SWITCH=true \
+            verimed-preview:pr-${{ github.event.pull_request.number }}
+
+      - name: Health Check
+        run: |
+          sleep 10
+          curl -f http://localhost:3000/health || exit 1
+
+      - name: Comment PR with Preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🚀 Preview Environment Ready
+
+            **PR #${{ github.event.pull_request.number }}** has been deployed to a preview environment.
+
+            | Info | Value |
+            |------|-------|
+            | Environment | Preview |
+            | Branch | \`${{ github.head_ref }}\` |
+            | Commit | \`${{ github.sha }}\` |
+            | Status | ✅ Healthy |
+
+            > **Note**: Preview environments are ephemeral and will be destroyed when the PR is closed.
+            > AI verification is disabled (Kill Switch ON) in preview mode.`
+            });
+
+      - name: Cleanup on PR Close
+        if: github.event.action == 'closed'
+        run: |
+          docker stop verimed-preview-${{ github.event.pull_request.number }} || true
+          docker rm verimed-preview-${{ github.event.pull_request.number }} || true

@@ -1,3 +1,4 @@
+import './infrastructure/telemetry/instrumentation'; // Must be first import
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger, VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -9,8 +10,16 @@ import compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Security: Set various HTTP headers to help protect the app
-  app.use(helmet());
+  // Security: Set various HTTP headers/HSTS
+  app.use(
+    helmet({
+      hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      },
+    }),
+  );
 
   // Performance: Compress response bodies
   app.use(compression());

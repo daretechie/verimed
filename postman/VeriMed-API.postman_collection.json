@@ -303,7 +303,7 @@
           }
         },
         {
-          "name": "Submit Verification - AI Fallback (Brazil)",
+          "name": "Submit Verification - Brazil (CFM)",
           "request": {
             "method": "POST",
             "header": [
@@ -318,14 +318,66 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"providerId\": \"br-provider-001\",\n  \"countryCode\": \"BR\",\n  \"firstName\": \"Roberto\",\n  \"lastName\": \"Silva\",\n  \"licenseNumber\": \"CRM-12345\"\n}"
+              "raw": "{\n  \"providerId\": \"br-provider-001\",\n  \"countryCode\": \"BR\",\n  \"firstName\": \"Roberto\",\n  \"lastName\": \"Silva\",\n  \"licenseNumber\": \"CRM-SP/123456\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/verify",
               "host": ["{{baseUrl}}"],
               "path": ["verify"]
             },
-            "description": "Brazil has no live API adapter - this will trigger AI document verification fallback"
+            "description": "Brazil CFM registry verification (Manual Review)"
+          }
+        },
+        {
+          "name": "Submit Verification - UK (GMC)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"uk-provider-001\",\n  \"countryCode\": \"GB\",\n  \"firstName\": \"Alexander\",\n  \"lastName\": \"Fleming\",\n  \"licenseNumber\": \"1234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            },
+            "description": "UK GMC registry verification (Manual Review)"
+          }
+        },
+        {
+          "name": "Submit Verification - Australia (AHPRA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"providerId\": \"au-provider-001\",\n  \"countryCode\": \"AU\",\n  \"firstName\": \"Howard\",\n  \"lastName\": \"Florey\",\n  \"licenseNumber\": \"MED0001234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["verify"]
+            },
+            "description": "Australia AHPRA registry verification (Manual Review)"
           }
         },
         {
@@ -400,6 +452,96 @@
               "raw": "{{baseUrl}}/verify/{{transactionId}}/review",
               "host": ["{{baseUrl}}"],
               "path": ["verify", "{{transactionId}}", "review"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Human-in-the-Loop (HITL)",
+      "item": [
+        {
+          "name": "List Pending Reviews",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews"]
+            }
+          }
+        },
+        {
+          "name": "Approve Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reviews/{{transactionId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "{{transactionId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "Reject Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Incomplete documentation\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reviews/{{transactionId}}/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["reviews", "{{transactionId}}", "reject"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chaos & Reliability",
+      "item": [
+        {
+          "name": "Toggle AI Kill Switch",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/chaos/kill-switch",
+              "host": ["{{baseUrl}}"],
+              "path": ["chaos", "kill-switch"]
+            }
+          }
+        },
+        {
+          "name": "Fairness Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/chaos/fairness",
+              "host": ["{{baseUrl}}"],
+              "path": ["chaos", "fairness"]
             }
           }
         }
