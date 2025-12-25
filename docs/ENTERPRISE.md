@@ -4,15 +4,26 @@ VeriMed Enterprise is a commercial extension of the open-source core, designed f
 
 ## Features
 
-### 1. Single Sign-On (SSO)
-- **SAML 2.0 Integration**: Connect with Okta, Azure AD, or any SAML-compliant Identity Provider.
-- **Role-Based Access Control (RBAC)**: Manage granular permissions for your team.
+### 1. Advanced Identity & Access
 
-### 2. Batch Verification
-- **Bulk CSV Processing**: Upload thousands of providers for verification in a single request.
-- **High Throughput**: Optimized for massive datasets.
+- **SAML 2.0 & OIDC**: Secure integration with Okta, Azure AD, Google Workspace, and Auth0.
+- **Enterprise RBAC**: Hierarchical roles (Admin, Reviewer, Viewer) with granular permissions.
+- **Auto-Provisioning**: Seamless user creation on first SSO login.
 
-### 3. Dedicated Support
+### 2. Bulk Operations
+
+- **CSV Import Wrapper**: User-friendly interface for mass verification uploads.
+- **Batch Engine Integration**: Direct integration with the high-performance core batch API.
+- **Status Tracking**: Detailed results for every row in your dataset.
+
+### 3. Compliance & Auditing
+
+- **Audit Dashboard**: Comprehensive logs of every verification, login, and configuration change.
+- **CSV Export**: Export audit trails for regulatory compliance or internal reporting.
+- **System Statistics**: Monitor usage patterns and verification metrics.
+
+### 4. Dedicated Support
+
 - **Priority Email Support**: Direct access to the engineering team.
 - **SLA**: Guaranteed response times.
 
@@ -21,6 +32,7 @@ VeriMed Enterprise is a commercial extension of the open-source core, designed f
 The Enterprise edition is delivered as a private Docker image.
 
 ### Prerequisites
+
 - A valid **License Key** (contact [sales@verimed.com](mailto:sales@verimed.com))
 - Access to the private container registry (granted upon purchase)
 

@@ -37,6 +37,7 @@ import type { IVerificationRepository } from '../../domain/ports/verification-re
 import { ReviewVerificationDto } from '../../application/dtos/review-verification.dto';
 import { ApiKeyGuard } from '../guards/api-key.guard';
 import { EnterpriseGuard } from '../guards/enterprise.guard';
+import { AISafetyGuard } from '../../common/guards/ai-safety.guard';
 import { WebhookService } from '../services/webhook.service';
 
 @ApiTags('Verification')
@@ -86,11 +87,19 @@ export class VerificationController {
     },
   })
   @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'documents', maxCount: 5 },
-      { name: 'idDocument', maxCount: 1 },
-    ]),
+    FileFieldsInterceptor(
+      [
+        { name: 'documents', maxCount: 5 },
+        { name: 'idDocument', maxCount: 1 },
+      ],
+      {
+        limits: {
+          fileSize: 10 * 1024 * 1024, // 10MB limit
+        },
+      },
+    ),
   )
+  @UseGuards(AISafetyGuard)
   async verify(
     @Body() dto: CreateVerificationDto,
     @UploadedFiles()
@@ -171,7 +180,7 @@ export class VerificationController {
   }
 
   @Post('batch')
-  @UseGuards(EnterpriseGuard)
+  @UseGuards(EnterpriseGuard, AISafetyGuard)
   @ApiOperation({
     summary: 'Submit multiple providers for batch verification',
     description: 'Requires Enterprise License',

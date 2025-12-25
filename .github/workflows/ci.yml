@@ -62,12 +62,19 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    outputs:
+      digest: ${{ steps.build-and-push.outputs.digest }}
     permissions:
       contents: read
       packages: write
+      id-token: write # Required for Cosign OIDC signing
+
     steps:
       - uses: actions/checkout@v6
       
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.5.0
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -76,8 +83,29 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ghcr.io/daretechie/verimed-core:latest
+
+      - name: Sign the published Docker image
+        env:
+          TAGS: ghcr.io/daretechie/verimed-core:latest
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        run: cosign sign --yes "${TAGS}@${DIGEST}"
+
+  provenance:
+    needs: [docker]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.0.0
+    with:
+      image: ghcr.io/daretechie/verimed-core
+      digest: ${{ needs.docker.outputs.digest }}
+    secrets:
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}

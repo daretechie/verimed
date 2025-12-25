@@ -1,0 +1,41 @@
+{
+  "name": "@verimed/sdk",
+  "version": "1.0.0",
+  "description": "Official TypeScript SDK for VeriMed Medical Provider Verification API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "verimed",
+    "medical",
+    "verification",
+    "healthcare",
+    "npi",
+    "license",
+    "api",
+    "sdk"
+  ],
+  "author": "VeriMed Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daretechie/verimed.git",
+    "directory": "sdk/typescript"
+  },
+  "homepage": "https://github.com/daretechie/verimed#readme",
+  "bugs": {
+    "url": "https://github.com/daretechie/verimed/issues"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

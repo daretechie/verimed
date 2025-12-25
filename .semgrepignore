@@ -1,0 +1,36 @@
+# Semgrep Ignore File
+# Exclude directories that don't need scanning
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Test coverage
+coverage/
+
+# IDE and editor
+.vscode/
+.idea/
+
+# Git
+.git/
+
+# Cache
+.cache/
+
+# Test fixtures (may contain intentionally vulnerable code)
+test/fixtures/
+
+# Documentation
+docs/
+*.md
+
+# Configuration files
+*.json
+*.yml
+*.yaml
+
+# Lock files
+package-lock.json

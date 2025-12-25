@@ -1,0 +1,9 @@
+npx lint-staged
+
+# Check for secrets before committing
+echo "🔍 Checking for secrets..."
+if git diff --cached --name-only | xargs grep -l -E "(password|secret|api_key|apikey|private_key)" --include="*.ts" --include="*.js" 2>/dev/null; then
+  echo "⚠️  Warning: Possible secrets detected in staged files. Please review before committing."
+fi
+
+echo "✅ Pre-commit checks passed"

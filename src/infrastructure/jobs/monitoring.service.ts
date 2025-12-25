@@ -91,15 +91,15 @@ export class MonitoringService {
 
     try {
       const extendedRepo = this.repository as TypeOrmVerificationRepository;
-      const expired = await extendedRepo.findExpiredVerifications();
+      // Limit batch size to avoid overwhelming APIs and reduce DB load
+      const batchSize = 10;
+      const expired = await extendedRepo.findExpiredVerifications(batchSize);
 
       this.logger.log(
         `Found ${expired.length} expired verifications to re-verify.`,
       );
 
-      // Limit batch size to avoid overwhelming APIs
-      const batchSize = 10;
-      const batch = expired.slice(0, batchSize);
+      const batch = expired;
 
       for (const log of batch) {
         try {

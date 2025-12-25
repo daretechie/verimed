@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: verimed
+  labels:
+    name: verimed
+    environment: production
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: verimed-quota
+  namespace: verimed
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: "4Gi"
+    limits.cpu: "8"
+    limits.memory: "8Gi"
+    pods: "20"
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: verimed-network-policy
+  namespace: verimed
+spec:
+  podSelector:
+    matchLabels:
+      app: verimed
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3000
+  egress:
+    # Allow DNS
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow PostgreSQL
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: database
+      ports:
+        - protocol: TCP
+          port: 5432
+    # Allow external HTTPS (for registry APIs)
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
